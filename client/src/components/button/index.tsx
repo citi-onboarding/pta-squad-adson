@@ -20,16 +20,19 @@ export default function Button({
     bgColor = "#50E678",      // cor padrão
     textColor = "white",        // cor padrão
     width,
+    onClickAction
 
 }: ButtonProps) {
     return (
         <BaseButton
             // valores padrão para todos os botões
-            className={`flex items-center justify-center gap-2 px-20 rounded-full hover:opacity-20 h-12 bg-[${bgColor}]`}
-              
+            className={`flex items-center justify-center gap-2 px-10 rounded-full hover:opacity-70 h-12`}
+
+            onClick={onClickAction}              
 
             // propriedades dinâmicas
             style={{
+                backgroundColor: bgColor,
                 color: textColor,
                 width: width
             }}
