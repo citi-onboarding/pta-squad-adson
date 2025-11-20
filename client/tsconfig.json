@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": "./src",
     "target": "es5",
     "lib": [
       "dom",
@@ -20,17 +19,18 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "paths": {
-      "@/*": ["./*"],
+      "@/*": ["./src/*"],
       "@mui/styled-engine": [
         "./node_modules/@mui/styled-engine-sc"
       ],
-      "@/components/*": ["./components/*"]
+      "@/components/*": ["./src/components/*"]
     },
     "plugins": [
       {
         "name": "next"
       }
-    ]
+    ],
+    "ignoreDeprecations": "6.0"
   },
   "include": [
     "next-env.d.ts",

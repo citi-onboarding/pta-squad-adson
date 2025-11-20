@@ -1,5 +1,6 @@
 "use client"
 
+import { ModalNewConsultation } from "@/components/modalNewConsultation";
 import Image from "next/image";
 
 import { LogoCITi } from "../assets";
@@ -12,6 +13,7 @@ export default function Home() {
       </div>
       <div className="flex flex-col justify-center items-center">
         <h1 className="text-white text-4xl font-bold">NextJS Boilerplate</h1>
+        <ModalNewConsultation/>
         <p className="text-white text-xl">
           Made with <strong>&lt; &#x0002F; &gt;</strong> and{" "}
           <strong>&hearts;</strong> by CITi
