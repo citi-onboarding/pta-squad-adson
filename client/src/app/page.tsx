@@ -1,7 +1,19 @@
-import Image from "next/image";
+"use client"
+import { Header } from "@/components/Header";
 import { AppointmentCard, appointmentType, animalType} from "@/components/appointmentCard";
 
-import { LogoCITi } from "../assets";
+
+const placeHolderAtedimento = (
+  <div className="p-8 text-center text-gray-400">
+    Conteúdo da Página de Atendimento
+  </div>
+);
+
+const placeHolderCadastro = (
+  <div className="p-8 text-center text-gray-400">
+    Conteúdo da Página de Cadastro
+  </div>
+);
 
 interface appointmentData{
   id:number;
@@ -40,9 +52,9 @@ const mockAppointments: appointmentData[] = [
     id: 3,
     date: '20/02',
     time: '16:45',
-    petName: 'Chopper',
-    ownerName: 'Pedro Costa',
-    vetName: 'Dr. Ricardo Borges',
+    petName: 'Luna',
+    ownerName: 'João Alves',
+    vetName: 'Dr. José Carlos',
     animalType: 'horse',
     appointmentType: 'Retorno',
   },
@@ -50,15 +62,22 @@ const mockAppointments: appointmentData[] = [
 
 export default function Home() {
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <h1 className="text-3xl font-extrabold text-gray-900 - mb-8">
-        Consultas
-      </h1>
-      <div className=" flex justify-around">
-        {mockAppointments.map((appointment)=>(
-          <AppointmentCard key={appointment.id}{...appointment}/>
-        ))}
+      <div>
+      <Header
+          serviceContent={placeHolderAtedimento}
+          registerContent={placeHolderCadastro}
+        />
       
+      <div className="p-6 bg-gray-50 min-h-screen">
+        <h1 className="text-3xl font-extrabold text-gray-900 - mb-8">
+          Consultas
+        </h1>
+        <div className=" flex justify-around">
+          {mockAppointments.map((appointment)=>(
+            <AppointmentCard key={appointment.id}{...appointment}/>
+          ))}
+        
+        </div>
       </div>
     </div>
   );

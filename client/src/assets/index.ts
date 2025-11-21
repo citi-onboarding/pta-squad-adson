@@ -1,10 +1,12 @@
 import LogoCITi from "./Logo.png";
-import catImg from "./animals/cat.png";
+import catImg from "./animals/cat.svg";
 import dogImg from "./animals/dog.png";
-import horseImg from "./animals/horse.png";
-import sheepImg from "./animals/sheep.png";
-import cowImg from ".//animals/cow.png";
-import pigImg from "./animals/pig.png";
+import horseImg from "./animals/horse.svg";
+import sheepImg from "./animals/sheep.svg";
+import cowImg from ".//animals/cow.svg";
+import pigImg from "./animals/pig.svg";
+import MadeWith from "@/assets/MadeWith.svg"
+import CitiPet from "./CitiPet.svg"
 
 export const Animals = {
   cat: catImg,
@@ -14,6 +16,7 @@ export const Animals = {
   pig: pigImg,
   sheep: sheepImg,
 };
-export { LogoCITi,catImg, dogImg,horseImg, sheepImg, cowImg, pigImg };
 
 
+
+export { LogoCITi,catImg, dogImg,horseImg, sheepImg, cowImg, pigImg, MadeWith, CitiPet };
