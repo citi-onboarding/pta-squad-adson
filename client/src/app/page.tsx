@@ -1,7 +1,5 @@
-import Image from "next/image";
 import { Header } from "@/components/Header";
 
-import { LogoCITi } from "../assets";
 
 const placeHolderAtedimento = (
   <div className="p-8 text-center text-gray-400">
