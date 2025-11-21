@@ -86,7 +86,7 @@ export function AppointmentCard({date,time,petName,ownerName,vetName,animalType,
 
             <div className="flex-shrink-0 ml-auto relative">
                 <div className="relative w-24 h-24">
-                    <Image src={imagemAnimal} alt = "Imagem Animal" className="w-full h-full object-contain pb-6" />
+                    <Image src={imagemAnimal} alt = "Animal image" className="w-full h-full object-contain pb-6" />
                 </div>
                 <div className= "bg-white/70 text-xs font-normal text-gray-700 rounded-sm px-5 py-1 absolute -bottom-2 right-0 whitespace-nowrap shadow-sm">
                     {appointmentType}
