@@ -1,46 +1,48 @@
-import { Button as BaseButton } from "@/components/ui/button"; 
+import { Button as BaseButton } from "@/components/ui/button";
 import { ReactNode } from "react";
 
 
-interface ButtonProps { 
-    // atributos manipuláveis
-    text: string;               // texto obrigatório
-    icon?: ReactNode;           // ícone opcional
-    bgColor?: string;           // cor do botão
-    textColor?: string;         // cor do texto
-    width?: string;             // largura
+interface ButtonProps {
+    text?: string;
+    icon?: ReactNode;
+    bgColor?: string;
+    width?: number;
+    height?: number;
     onClickAction?: () => void;
+    className?: string;
+    type?: "button" | "submit";
 }
 
 
-export default function Button({ 
-
-    text, 
-    icon, 
-    bgColor = "#50E678",      // cor padrão
-    textColor = "white",        // cor padrão
+export default function Button({
+    text,
+    icon,
+    bgColor = "#50E678",
     width,
-    onClickAction
-
+    height = 48,
+    onClickAction,
+    className = "",
+    type = "button",
+    ...props
 }: ButtonProps) {
     return (
         <BaseButton
-            // valores padrão para todos os botões
-            className={`flex items-center justify-center gap-2 px-10 rounded-full hover:opacity-70 h-12`}
-
-            onClick={onClickAction}              
-
-            // propriedades dinâmicas
+            className={
+                "flex items-center justify-center gap-2 px-10 rounded-full hover:opacity-70 shadow font-bold " +
+                className
+            }
+            onClick={onClickAction}
+            type={type}
             style={{
                 backgroundColor: bgColor,
-                color: textColor,
-                width: width
+                width: width,
+                height: height,
+                color: "white"
             }}
+            {...props}
         >
-
             {icon && <span>{icon}</span>}
-            <span>{text}</span> 
-
+            {text && <span>{text}</span>}
         </BaseButton>
     );
 }
