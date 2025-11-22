@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { z } from "zod";
+import Button from "@/components/button";
 
 import sheepImg from "@/assets/sheep.svg";
 import catImg from "@/assets/cat.svg";
@@ -21,39 +22,48 @@ import {
 } from "@/components/ui/select";
 
 
-const registrationSchema = z
+const patientSchema = z.object({
+  patientName: z
+    .string()
+    .min(1, "Nome do paciente é obrigatório")
+    .regex(/^[a-zA-ZÀ-ÿ\s]+$/, "Nome do paciente deve conter apenas letras e espaços"),
+  tutorName: z
+    .string()
+    .min(1, "Nome do tutor é obrigatório")
+    .regex(/^[a-zA-ZÀ-ÿ\s]+$/, "Nome do tutor deve conter apenas letras e espaços"),
+  species: z.string().min(1, "Selecione uma espécie"),
+  age: z.preprocess((val) => {
+    if (typeof val === "string") {
+      const v = val.trim();
+      return v === "" ? NaN : Number(v);
+    }
+    return val;
+  }, z.number().int().positive({ message: "Informe uma idade válida" })),
+});
+
+
+const consultSchema = z
   .object({
-    patientName: z.string().min(1, "Nome do paciente é obrigatório"),
-    tutorName: z.string().min(1, "Nome do tutor é obrigatório"),
-    species: z.string().min(1, "Selecione uma espécie"),
-    age: z.preprocess((val) => {
-      if (typeof val === "string") {
-        const v = val.trim();
-        return v === "" ? NaN : Number(v);
-      }
-      return val;
-    }, z.number().int().positive({ message: "Informe uma idade válida" })),
     consultType: z.string().min(1, "Selecione o tipo de consulta"),
-    doctor: z.string().min(1, "Informe o médico responsável"),
+    doctor: z
+      .string()
+      .min(1, "Informe o médico responsável")
+      .regex(/^[a-zA-ZÀ-ÿ\s]+$/, "Médico responsável deve conter apenas letras e espaços"),
     date: z.string().min(1, "Selecione uma data"),
     time: z.string().min(1, "Selecione o horário"),
     description: z.string().min(1, "Descreva o problema"),
   })
   .refine((data) => {
-    
     try {
       const now = new Date();
 
-      
       const [y, m, d] = data.date.split("-").map(Number);
       if (![y, m, d].every((n) => Number.isFinite(n))) return false;
       const selectedDate = new Date(y, m - 1, d);
       const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-      
       if (selectedDate < todayStart) return false;
 
-      
       const isSameDay =
         selectedDate.getFullYear() === now.getFullYear() &&
         selectedDate.getMonth() === now.getMonth() &&
@@ -64,7 +74,6 @@ const registrationSchema = z
         if (parts.length !== 2 || parts.some((n) => Number.isNaN(n))) return false;
         const [h, min] = parts;
         const selectedDateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, min || 0);
-       
         if (selectedDateTime < now) return false;
       }
 
@@ -86,10 +95,6 @@ export default function RegistrationForm() {
   const [description, setDescription] = useState("");
   const [submitResult, setSubmitResult] = useState<any | null>(null);
 
-  function log(name: string, value: any) {
-    console.log(`[change] ${name}:`, value);
-  }
-
   function getTodayISO() {
     const d = new Date();
     const yyyy = d.getFullYear();
@@ -105,18 +110,21 @@ export default function RegistrationForm() {
     return `${hh}:${mm}`;
   }
 
- 
   const todayISO = getTodayISO();
   const nowHHMM = getNowHHMM();
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    const data = {
+    const patientData = {
       patientName,
       tutorName,
       species,
       age,
+    };
+
+   
+    const consultData = {
       consultType,
       doctor,
       date,
@@ -125,12 +133,20 @@ export default function RegistrationForm() {
     };
 
     
-    console.log("raw payload:", data);
-
     try {
-      const validated = registrationSchema.parse(data);
-      console.log("✅ Dados validados com sucesso:", validated);
-      setSubmitResult({ ok: true, data: validated });
+      
+      const validatedPatient = patientSchema.parse(patientData);
+      console.log("✅ Dados do paciente validados:", validatedPatient);
+
+      
+      const validatedConsult = consultSchema.parse(consultData);
+      console.log("✅ Dados da consulta validados:", validatedConsult);
+
+      setSubmitResult({ 
+        ok: true, 
+        patient: validatedPatient, 
+        consult: validatedConsult 
+      });
     } catch (err: any) {
       console.error("❌ Erros de validação:", err);
       setSubmitResult({ ok: false, error: err });
@@ -175,8 +191,8 @@ export default function RegistrationForm() {
               value={patientName}
               placeholder="Digite aqui..."
               onChange={(e) => {
-                setPatientName(e.target.value);
-                log("patientName", e.target.value);
+                const filtered = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, "");
+                setPatientName(filtered);
               }}
               className="w-[754px] h-[50px] rounded-[8px] border border-[#101010] px-4 py-0 box-border"
             />
@@ -198,8 +214,8 @@ export default function RegistrationForm() {
               value={tutorName}
               placeholder="Digite aqui..."
               onChange={(e) => {
-                setTutorName(e.target.value);
-                log("tutorName", e.target.value);
+                const filtered = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, "");
+                setTutorName(filtered);
               }}
               className="w-[754px] h-[50px] rounded-[8px] border border-[#101010] px-4 box-border"
             />
@@ -237,7 +253,6 @@ export default function RegistrationForm() {
                 type="button"
                 onClick={() => {
                   setSpecies(animal.key);
-                  log("species", animal.key);
                 }}
                 aria-pressed={isActive}
                 className={`p-[10px] rounded-lg transition select-none focus:outline-none ${
@@ -273,11 +288,9 @@ export default function RegistrationForm() {
             <Input
               value={age}
               placeholder="Digite aqui..."
-              
               onChange={(e) => {
                 const digits = e.target.value.replace(/\D/g, "");
                 setAge(digits);
-                log("age", digits);
               }}
               inputMode="numeric"
               pattern="\d*"
@@ -301,7 +314,6 @@ export default function RegistrationForm() {
             value={consultType}
             onValueChange={(value) => {
               setConsultType(value);
-              log("consultType", value);
             }}
           >
             <SelectTrigger className="w-[735px] h-[50px] rounded-[8px] border border-[#101010] px-4 box-border">
@@ -335,8 +347,8 @@ export default function RegistrationForm() {
             value={doctor}
             placeholder="Digite aqui..."
             onChange={(e) => {
-              setDoctor(e.target.value);
-              log("doctor", e.target.value);
+              const filtered = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, "");
+              setDoctor(filtered);
             }}
             className="w-[696px] h-[50px] rounded-[8px] border border-[#101010] px-4 box-border"
           />
@@ -355,14 +367,9 @@ export default function RegistrationForm() {
           <input
             type="date"
             value={date}
-            min={todayISO}                    
+            min={todayISO}
             onChange={(e) => {
               setDate(e.target.value);
-              log("date", e.target.value);
-              
-              if (e.target.value !== todayISO) {
-                
-              }
             }}
             className="w-[390px] h-[50px] rounded-[8px] border border-[#101010] px-4 box-border"
           />
@@ -381,10 +388,9 @@ export default function RegistrationForm() {
           <input
             type="time"
             value={time}
-            min={date === todayISO ? nowHHMM : undefined} 
+            min={date === todayISO ? nowHHMM : undefined}
             onChange={(e) => {
               setTime(e.target.value);
-              log("time", e.target.value);
             }}
             className="w-[350px] h-[50px] rounded-[8px] border border-[#101010] px-4 box-border"
           />
@@ -407,9 +413,17 @@ export default function RegistrationForm() {
           placeholder="Digite aqui..."
           onChange={(e) => {
             setDescription(e.target.value);
-            log("description", e.target.value);
           }}
           className="w-[1485px] h-[104px] border border-[#101010] rounded-[8px] p-4 box-border resize-none"
+        />
+      </div>
+
+      {/* botão de envio */}
+      <div className="flex justify-end mt-8">
+        <Button
+          type="submit"
+          text="Finalizar Cadastro"
+          width={205}
         />
       </div>
     </form>
