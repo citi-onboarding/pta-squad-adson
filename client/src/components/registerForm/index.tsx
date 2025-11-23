@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Button from "@/components/button";
 
@@ -23,77 +25,42 @@ import {
 
 
 const patientSchema = z.object({
-  patientName: z
-    .string()
-    .min(1, "Nome do paciente é obrigatório")
-    .regex(/^[a-zA-ZÀ-ÿ\s]+$/, "Nome do paciente deve conter apenas letras e espaços"),
-  tutorName: z
-    .string()
-    .min(1, "Nome do tutor é obrigatório")
-    .regex(/^[a-zA-ZÀ-ÿ\s]+$/, "Nome do tutor deve conter apenas letras e espaços"),
-  species: z.string().min(1, "Selecione uma espécie"),
-  age: z.preprocess((val) => {
-    if (typeof val === "string") {
-      const v = val.trim();
-      return v === "" ? NaN : Number(v);
-    }
-    return val;
-  }, z.number().int().positive({ message: "Informe uma idade válida" })),
+  patientName: z.string().min(1, "Este campo é obrigatório"),
+  tutorName: z.string().min(1, "Este campo é obrigatório"),
+  species: z.string().min(1, "Este campo é obrigatório"),
+  age: z.string().min(1, "Este campo é obrigatório"),
 });
 
 
-const consultSchema = z
-  .object({
-    consultType: z.string().min(1, "Selecione o tipo de consulta"),
-    doctor: z
-      .string()
-      .min(1, "Informe o médico responsável")
-      .regex(/^[a-zA-ZÀ-ÿ\s]+$/, "Médico responsável deve conter apenas letras e espaços"),
-    date: z.string().min(1, "Selecione uma data"),
-    time: z.string().min(1, "Selecione o horário"),
-    description: z.string().min(1, "Descreva o problema"),
-  })
-  .refine((data) => {
-    try {
-      const now = new Date();
+const consultSchema = z.object({
+  consultType: z.string().min(1, "Este campo é obrigatório"),
+  doctor: z.string().min(1, "Este campo é obrigatório"),
+  date: z.string().min(1, "Este campo é obrigatório"),
+  time: z.string().min(1, "Este campo é obrigatório"),
+  description: z.string().min(1, "Este campo é obrigatório"),
+});
 
-      const [y, m, d] = data.date.split("-").map(Number);
-      if (![y, m, d].every((n) => Number.isFinite(n))) return false;
-      const selectedDate = new Date(y, m - 1, d);
-      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-      if (selectedDate < todayStart) return false;
+const formSchema = patientSchema.merge(consultSchema);
 
-      const isSameDay =
-        selectedDate.getFullYear() === now.getFullYear() &&
-        selectedDate.getMonth() === now.getMonth() &&
-        selectedDate.getDate() === now.getDate();
-
-      if (isSameDay) {
-        const parts = data.time.split(":").map(Number);
-        if (parts.length !== 2 || parts.some((n) => Number.isNaN(n))) return false;
-        const [h, min] = parts;
-        const selectedDateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, min || 0);
-        if (selectedDateTime < now) return false;
-      }
-
-      return true;
-    } catch {
-      return false;
-    }
-  }, { message: "A data/horário deve ser igual ou posterior ao horário atual" });
+type FormData = z.infer<typeof formSchema>;
 
 export default function RegistrationForm() {
-  const [patientName, setPatientName] = useState("");
-  const [tutorName, setTutorName] = useState("");
   const [species, setSpecies] = useState<string | null>(null);
-  const [age, setAge] = useState("");
-  const [consultType, setConsultType] = useState("");
-  const [doctor, setDoctor] = useState("");
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
-  const [description, setDescription] = useState("");
   const [submitResult, setSubmitResult] = useState<any | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch
+  } = useForm<FormData>({
+    resolver: zodResolver(formSchema)
+  });
+
+  const watchedConsultType = watch("consultType");
+  const watchedDate = watch("date");
 
   function getTodayISO() {
     const d = new Date();
@@ -113,45 +80,32 @@ export default function RegistrationForm() {
   const todayISO = getTodayISO();
   const nowHHMM = getNowHHMM();
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  const onSubmit = (data: FormData) => {
 
-    const patientData = {
-      patientName,
-      tutorName,
-      species,
-      age,
+    const patientData ={
+      patientName : data.patientName,
+      tutorName : data.tutorName,
+      species: data.species,
+      age : data.age,
     };
 
-   
     const consultData = {
-      consultType,
-      doctor,
-      date,
-      time,
-      description,
+      consultType : data.consultType,
+      doctor : data.doctor,
+      date : data.date,
+      time : data.time,
+      description : data.description,
     };
 
+    console.log("Paciente:",patientData);
+    console.log("Consulta:",consultData);
     
-    try {
-      
-      const validatedPatient = patientSchema.parse(patientData);
-      console.log("✅ Dados do paciente validados:", validatedPatient);
-
-      
-      const validatedConsult = consultSchema.parse(consultData);
-      console.log("✅ Dados da consulta validados:", validatedConsult);
-
-      setSubmitResult({ 
-        ok: true, 
-        patient: validatedPatient, 
-        consult: validatedConsult 
-      });
-    } catch (err: any) {
-      console.error("❌ Erros de validação:", err);
-      setSubmitResult({ ok: false, error: err });
-    }
-  }
+    setSubmitResult({ 
+      ok: true, 
+      patient : patientData,
+      consult : consultData
+    });
+  };
 
   const animals = [
     { key: "sheep", src: sheepImg, alt: "Ovelha" },
@@ -171,8 +125,8 @@ export default function RegistrationForm() {
 
   return (
     <form
-      onSubmit={handleSubmit}
-      className="flex flex-col gap-6 w-[1532px]  mx-auto bg-white p-6 rounded-xl shadow-md"
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col gap-6 w-[1532px]  mx-auto bg-white p-6 rounded-xl "
     >
       {/* Nome Paciente + Nome Tutor */}
       <div className="grid grid-cols-2 gap-4">
@@ -186,16 +140,23 @@ export default function RegistrationForm() {
           >
             Nome do Paciente
           </label>
-          <div className="flex items-center gap-4">
-            <Input
-              value={patientName}
-              placeholder="Digite aqui..."
-              onChange={(e) => {
-                const filtered = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, "");
-                setPatientName(filtered);
-              }}
-              className="w-[754px] h-[50px] rounded-[8px] border border-[#101010] px-4 py-0 box-border"
-            />
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-4">
+              <Input
+                {...register("patientName")}
+                placeholder="Digite aqui..."
+                onChange={(e) => {
+                  const filtered = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, "");
+                  setValue("patientName", filtered);
+                }}
+                className={`w-[754px] h-[50px] rounded-[8px] border px-4 py-0 box-border ${
+                  errors.patientName ? "border-red-500" : "border-[#101010]"
+                }`}
+              />
+            </div>
+            {errors.patientName && (
+              <span className="text-red-500 text-sm">{errors.patientName.message}</span>
+            )}
           </div>
         </div>
 
@@ -209,16 +170,23 @@ export default function RegistrationForm() {
           >
             Nome do Tutor
           </label>
-          <div className="flex items-center gap-4">
-            <Input
-              value={tutorName}
-              placeholder="Digite aqui..."
-              onChange={(e) => {
-                const filtered = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, "");
-                setTutorName(filtered);
-              }}
-              className="w-[754px] h-[50px] rounded-[8px] border border-[#101010] px-4 box-border"
-            />
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-4">
+              <Input
+                {...register("tutorName")}
+                placeholder="Digite aqui..."
+                onChange={(e) => {
+                  const filtered = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, "");
+                  setValue("tutorName", filtered);
+                }}
+                className={`w-[754px] h-[50px] rounded-[8px] border px-4 box-border ${
+                  errors.tutorName ? "border-red-500" : "border-[#101010]"
+                }`}
+              />
+            </div>
+            {errors.tutorName && (
+              <span className="text-red-500 text-sm">{errors.tutorName.message}</span>
+            )}
           </div>
         </div>
       </div>
@@ -253,6 +221,7 @@ export default function RegistrationForm() {
                 type="button"
                 onClick={() => {
                   setSpecies(animal.key);
+                  setValue("species", animal.key);
                 }}
                 aria-pressed={isActive}
                 className={`p-[10px] rounded-lg transition select-none focus:outline-none ${
@@ -270,6 +239,14 @@ export default function RegistrationForm() {
             );
           })}
         </div>
+        <input
+          {...register("species")}
+          type="hidden"
+          value={species || ""}
+        />
+        {errors.species && (
+          <span className="text-red-500 text-sm block mt-1">{errors.species.message}</span>
+        )}
       </div>
 
       {/* Idade + Tipo de Consulta (mesma linha) */}
@@ -284,18 +261,25 @@ export default function RegistrationForm() {
           >
             Idade do Paciente
           </label>
-          <div className="flex">
-            <Input
-              value={age}
-              placeholder="Digite aqui..."
-              onChange={(e) => {
-                const digits = e.target.value.replace(/\D/g, "");
-                setAge(digits);
-              }}
-              inputMode="numeric"
-              pattern="\d*"
-              className="w-[754px] h-[50px] rounded-[8px] border border-[#101010] px-4 box-border"
-            />
+          <div className="flex flex-col gap-1">
+            <div className="flex">
+              <Input
+                {...register("age")}
+                placeholder="Digite aqui..."
+                onChange={(e) => {
+                  const digits = e.target.value.replace(/\D/g, "");
+                  setValue("age", digits);
+                }}
+                inputMode="numeric"
+                pattern="\d*"
+                className={`w-[754px] h-[50px] rounded-[8px] border px-4 box-border ${
+                  errors.age ? "border-red-500" : "border-[#101010]"
+                }`}
+              />
+            </div>
+            {errors.age && (
+              <span className="text-red-500 text-sm">{errors.age.message}</span>
+            )}
           </div>
         </div>
 
@@ -310,24 +294,36 @@ export default function RegistrationForm() {
             Tipo da consulta
           </label>
 
-          <Select
-            value={consultType}
-            onValueChange={(value) => {
-              setConsultType(value);
-            }}
-          >
-            <SelectTrigger className="w-[735px] h-[50px] rounded-[8px] border border-[#101010] px-4 box-border">
-              <SelectValue placeholder="Selecione aqui" />
-            </SelectTrigger>
+          <div className="flex flex-col gap-1">
+            <Select
+              value={watchedConsultType || ""}
+              onValueChange={(value) => {
+                setValue("consultType", value);
+              }}
+            >
+              <SelectTrigger className={`w-[735px] h-[50px] rounded-[8px] border px-4 box-border ${
+                errors.consultType ? "border-red-500" : "border-[#101010]"
+              }`}>
+                <SelectValue placeholder="Selecione aqui" />
+              </SelectTrigger>
 
-            <SelectContent>
-              {consultTypes.map((t) => (
-                <SelectItem key={t} value={t}>
-                  {t}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+              <SelectContent>
+                {consultTypes.map((t) => (
+                  <SelectItem key={t} value={t}>
+                    {t}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <input
+              {...register("consultType")}
+              type="hidden"
+              value={watchedConsultType || ""}
+            />
+            {errors.consultType && (
+              <span className="text-red-500 text-sm">{errors.consultType.message}</span>
+            )}
+          </div>
         </div>
       </div>
 
@@ -343,15 +339,22 @@ export default function RegistrationForm() {
           >
             Médico Responsável
           </label>
-          <Input
-            value={doctor}
-            placeholder="Digite aqui..."
-            onChange={(e) => {
-              const filtered = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, "");
-              setDoctor(filtered);
-            }}
-            className="w-[696px] h-[50px] rounded-[8px] border border-[#101010] px-4 box-border"
-          />
+          <div className="flex flex-col gap-1">
+            <Input
+              {...register("doctor")}
+              placeholder="Digite aqui..."
+              onChange={(e) => {
+                const filtered = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, "");
+                setValue("doctor", filtered);
+              }}
+              className={`w-[696px] h-[50px] rounded-[8px] border px-4 box-border ${
+                errors.doctor ? "border-red-500" : "border-[#101010]"
+              }`}
+            />
+            {errors.doctor && (
+              <span className="text-red-500 text-sm">{errors.doctor.message}</span>
+            )}
+          </div>
         </div>
 
         <div className="flex flex-col">
@@ -364,15 +367,19 @@ export default function RegistrationForm() {
           >
             Data do atendimento
           </label>
-          <input
-            type="date"
-            value={date}
-            min={todayISO}
-            onChange={(e) => {
-              setDate(e.target.value);
-            }}
-            className="w-[390px] h-[50px] rounded-[8px] border border-[#101010] px-4 box-border"
-          />
+          <div className="flex flex-col gap-1">
+            <input
+              {...register("date")}
+              type="date"
+              min={todayISO}
+              className={`w-[390px] h-[50px] rounded-[8px] border px-4 box-border ${
+                errors.date ? "border-red-500" : "border-[#101010]"
+              }`}
+            />
+            {errors.date && (
+              <span className="text-red-500 text-sm">{errors.date.message}</span>
+            )}
+          </div>
         </div>
 
         <div className="flex flex-col">
@@ -385,15 +392,19 @@ export default function RegistrationForm() {
           >
             Horário do atendimento
           </label>
-          <input
-            type="time"
-            value={time}
-            min={date === todayISO ? nowHHMM : undefined}
-            onChange={(e) => {
-              setTime(e.target.value);
-            }}
-            className="w-[350px] h-[50px] rounded-[8px] border border-[#101010] px-4 box-border"
-          />
+          <div className="flex flex-col gap-1">
+            <input
+              {...register("time")}
+              type="time"
+              min={watchedDate === todayISO ? nowHHMM : undefined}
+              className={`w-[350px] h-[50px] rounded-[8px] border px-4 box-border ${
+                errors.time ? "border-red-500" : "border-[#101010]"
+              }`}
+            />
+            {errors.time && (
+              <span className="text-red-500 text-sm">{errors.time.message}</span>
+            )}
+          </div>
         </div>
       </div>
 
@@ -408,14 +419,18 @@ export default function RegistrationForm() {
         >
           Descrição do Problema
         </label>
-        <textarea
-          value={description}
-          placeholder="Digite aqui..."
-          onChange={(e) => {
-            setDescription(e.target.value);
-          }}
-          className="w-[1485px] h-[104px] border border-[#101010] rounded-[8px] p-4 box-border resize-none"
-        />
+        <div className="flex flex-col gap-1">
+          <textarea
+            {...register("description")}
+            placeholder="Digite aqui..."
+            className={`w-[1485px] h-[104px] border rounded-[8px] p-4 box-border resize-none ${
+              errors.description ? "border-red-500" : "border-[#101010]"
+            }`}
+          />
+          {errors.description && (
+            <span className="text-red-500 text-sm">{errors.description.message}</span>
+          )}
+        </div>
       </div>
 
       {/* botão de envio */}
