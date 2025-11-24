@@ -50,14 +50,12 @@ export function AppointmentCard({date,time,petName,ownerName,vetName,animalType,
         <BaseButton
             onClick= {handleClick}
             variant= {null}
-            className={
-                `${colors.cardBg} p-5 rounded-xl  flex items-center justify-between w-full 
+            className={`${colors.cardBg} p-5 rounded-xl  flex items-center justify-between w-full 
                 h-[135px] ${className}`
-            }
-        > 
+            }> 
             <div className="flex-shrink-0 mr-4 self-center">
                 <div className={`bg-white/70 backdrop-blur-sm p-2 rounded-lg text-center
-                flex flex-col items-center justify-center w-full max-2-lg text-black-700
+                flex flex-col items-center justify-center w-max-[495px] text-black-700
                     `}>
                     
                     <AlarmClock className="w-5 h-5 mb-1 text-black-700"/>
