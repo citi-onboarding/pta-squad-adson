@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import Button from "@/components/Button";
+import Button from "../button";
 import { CircleCheckBig } from "lucide-react";
 import {
   Dialog,
@@ -90,7 +90,7 @@ function DialogDemo() {
 
         <form onSubmit={handleSubmit(onSubmit)} className="h-full flex flex-col">
 
-          {/* ÁREA ROLÁVEL */}
+         
           <div className="overflow-y-auto px-1 pb-4 flex-1">
 
             <DialogHeader className="w-full">
@@ -123,10 +123,10 @@ function DialogDemo() {
                       <SelectValue placeholder="Selecione aqui" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="primeiraConsulta">Primeira consulta</SelectItem>
-                      <SelectItem value="retorno">Retorno</SelectItem>
+                      <SelectItem value="firstConsultation">Primeira consulta</SelectItem>
+                      <SelectItem value="return">Retorno</SelectItem>
                       <SelectItem value="checkup">Check-up</SelectItem>
-                      <SelectItem value="vacinacao">Vacinação</SelectItem>
+                      <SelectItem value="vaccination">Vacinação</SelectItem>
                     </SelectContent>
                   </Select>
 
@@ -215,7 +215,7 @@ function DialogDemo() {
 
           </div>
 
-          {/* BOTÃO FORA DO SCROLL, MARGEM FUNCIONando */}
+          
           <div className="w-full flex justify-center mt-4 mb-2">
             <Button
               text="Finalizar cadastro"
