@@ -128,11 +128,11 @@ export default function RegistrationForm() {
       onSubmit={handleSubmit(onSubmit)}
       className="flex flex-col gap-6 w-[1532px]  mx-auto bg-white p-6 rounded-xl "
     >
-      {/* Nome Paciente + Nome Tutor */}
+      
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label
-            className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 block"
+            className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 text-black flex justify-start"
             style={{
               fontFamily:
                 'SF Pro Display, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
@@ -162,7 +162,7 @@ export default function RegistrationForm() {
 
         <div>
           <label
-            className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 block"
+            className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 text-black flex justify-start"
             style={{
               fontFamily:
                 'SF Pro Display, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
@@ -191,10 +191,10 @@ export default function RegistrationForm() {
         </div>
       </div>
 
-      {/* Seleção de Espécie */}
+      
       <div>
         <label
-          className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-3 block"
+          className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-3 text-black flex justify-start"
           style={{
             fontFamily:
               'SF Pro Display, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
@@ -249,11 +249,11 @@ export default function RegistrationForm() {
         )}
       </div>
 
-      {/* Idade + Tipo de Consulta (mesma linha) */}
+
       <div className="grid grid-cols-2 gap-4"> 
         <div>
           <label
-            className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 block"
+            className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 text-black flex justify-start"
             style={{
               fontFamily:
                 'SF Pro Display, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
@@ -285,7 +285,7 @@ export default function RegistrationForm() {
 
         <div>
           <label
-            className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 block"
+            className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 text-black flex justify-start"
             style={{
               fontFamily:
                 'SF Pro Display, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
@@ -327,11 +327,11 @@ export default function RegistrationForm() {
         </div>
       </div>
 
-      {/* Médico Responsável / Data / Horário (mesma linha) */}
+      
       <div className="flex items-start gap-6">
         <div className="flex flex-col">
           <label
-            className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 block"
+            className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 text-black flex justify-start"
             style={{
               fontFamily:
                 'SF Pro Display, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
@@ -359,7 +359,7 @@ export default function RegistrationForm() {
 
         <div className="flex flex-col">
           <label
-            className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 block"
+            className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 text-black flex justify-start"
             style={{
               fontFamily:
                 'SF Pro Display, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
@@ -384,7 +384,7 @@ export default function RegistrationForm() {
 
         <div className="flex flex-col">
           <label
-            className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 block"
+            className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 text-black flex justify-start"
             style={{
               fontFamily:
                 'SF Pro Display, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
@@ -408,10 +408,10 @@ export default function RegistrationForm() {
         </div>
       </div>
 
-      {/* Descrição */}
+     
       <div className="flex flex-col gap-4">
         <label
-          className="text-[16px] font-bold leading-[110%] tracking-[0px] block"
+          className="text-[16px] font-bold leading-[110%] tracking-[0px] text-black flex justify-start"
           style={{
             fontFamily:
               'SF Pro Display, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
@@ -433,7 +433,7 @@ export default function RegistrationForm() {
         </div>
       </div>
 
-      {/* botão de envio */}
+     
       <div className="flex justify-end mt-8">
         <Button
           type="submit"
