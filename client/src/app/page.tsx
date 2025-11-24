@@ -35,48 +35,80 @@ const mockAppointments: appointmentData[] = [
     petName: 'Luna',
     ownerName: 'João Alves',
     vetName: 'Dr. José Carlos',
-    animalType: 'dog',
+    animalType: 'cat',
     appointmentType: 'Primeira Consulta',
   },
   {
     id: 2,
-    date: '19/02',
-    time: '10:30',
-    petName: 'Rex',
-    ownerName: 'Maria Silva',
-    vetName: 'Dra. Ana Paula',
-    animalType: 'cat',
-    appointmentType: 'Vacinação',
-  },
-  {
-    id: 3,
-    date: '20/02',
-    time: '16:45',
+    date: '18/02',
+    time: '13:00',
     petName: 'Luna',
     ownerName: 'João Alves',
     vetName: 'Dr. José Carlos',
     animalType: 'horse',
     appointmentType: 'Retorno',
   },
+  {
+    id: 3,
+    date: '18/02',
+    time: '13:00',
+    petName: 'Luna',
+    ownerName: 'João Alves',
+    vetName: 'Dr. José Carlos',
+    animalType: 'cow',
+    appointmentType: 'Check-up',
+  },
+  {
+    id: 4,
+    date: '18/02',
+    time: '13:00',
+    petName: 'Luna',
+    ownerName: 'João Alves',
+    vetName: 'Dr. José Carlos',
+    animalType: 'sheep',
+    appointmentType: 'Vacinação',
+  },
+  {
+    id: 5,
+    date: '18/02',
+    time: '13:00',
+    petName: 'Luna',
+    ownerName: 'João Alves',
+    vetName: 'Dr. José Carlos',
+    animalType: 'dog',
+    appointmentType: 'Vacinação',
+  },
+  {
+    id: 6,
+    date: '18/02',
+    time: '13:00',
+    petName: 'Luna',
+    ownerName: 'João Alves',
+    vetName: 'Dr. José Carlos',
+    animalType: 'pig',
+    appointmentType: 'Vacinação',
+  },
 ]
 
 export default function Home() {
   return (
-      <div>
+    <div>
       <Header
-          serviceContent={placeHolderAtedimento}
-          registerContent={placeHolderCadastro}
-        />
+        serviceContent={placeHolderAtedimento}
+        registerContent={placeHolderCadastro}
+    />
       
       <div className="p-6 bg-gray-50 min-h-screen">
         <h1 className="text-3xl font-extrabold text-gray-900 - mb-8">
           Consultas
         </h1>
-        <div className=" flex justify-around">
+        <div className="grid grid-cols-3 gap-6 justify-items-center">
           {mockAppointments.map((appointment)=>(
-            <AppointmentCard key={appointment.id}{...appointment}/>
+            <AppointmentCard 
+              key={appointment.id} 
+              {...appointment}
+            />
           ))}
-        
         </div>
       </div>
     </div>

@@ -16,7 +16,7 @@ const colorMap: Record<appointmentType, { cardBg: string}> = {
     cardBg: 'bg-[#AAE1FF]'
   },
   'Retorno': {
-    cardBg: 'bg-[#FFA35D]'
+    cardBg: 'bg-[#FF6419]/60'
   },
   'Check-up': {
     cardBg: 'bg-[#9CFF95]'
@@ -49,46 +49,44 @@ export function AppointmentCard({date,time,petName,ownerName,vetName,animalType,
     return(
         <BaseButton
             onClick= {handleClick}
-            variant="outline"
+            variant= {null}
             className={
-                `${colors.cardBg} p-5 rounded-xl shadow-lg flex items-center justify-between w-full max-w-lg 
-                h-auto ${className}`
+                `${colors.cardBg} p-5 rounded-xl  flex items-center justify-between w-full 
+                h-[135px] ${className}`
             }
         > 
-    
-            <div className="mr-3 flex-shrink-0">
-                <div className={`
-                    bg-white/70 backdrop-blur-sm p-2 rounded-lg text-center
-                    flex flex-col items-center justify-center w-full max-2-lg
-                    hover:bg-opacity-90 transition-opacity
+            <div className="flex-shrink-0 mr-4 self-center">
+                <div className={`bg-white/70 backdrop-blur-sm p-2 rounded-lg text-center
+                flex flex-col items-center justify-center w-full max-2-lg text-black-700
                     `}>
                     
-                    <AlarmClock className="w-5 h-5 mb-1 text-gray-700"/>
-                    <span className="text-mg font-bold text-gray-700 leading-none mt-1">
+                    <AlarmClock className="w-5 h-5 mb-1 text-black-700"/>
+                    <span className="text-[14px] font-bold leading-none mt-1">
                         {date}
                     </span>
-                    <span className="text-md font-bold text-gray-700 leading-nome - mt-1">
+                    <span className="text-[14px] font-bold leading-none mt-1"> 
                         {time}
                     </span>
 
                 </div>
             </div>
 
-            <div className="flex justify-center flex-grow min-w-0 pr-4">
-                <p className="text-[13px] font-bold text-gray-800 mt-1">
+            <div className="flex justify-center flex-grow min-w-0 pr-4 gap-6"> 
+
+                <p className="text-[16px] font-bold text-gray-800 truncate leading-tight">
                     {petName} / {ownerName}
                 </p>
-                <p className="text-sm text-gray-600 truncate ml-5 mt-1">
+                <p className="text-[16px] text-gray-600 truncate leading-tight"> 
                     {vetName}
                 </p>
 
             </div>
 
-            <div className="flex-shrink-0 ml-auto relative">
-                <div className="relative w-24 h-24">
-                    <Image src={imagemAnimal} alt = "Animal image" className="w-full h-full object-contain pb-6" />
+            <div className="flex-shrink-0 ml-6 relative  flex flex-col justify-center items-center">
+                <div className="relative w-20 h-20">
+                    <Image src={imagemAnimal} alt = "Animal image" className="w-full h-full object-contain pb-1" />
                 </div>
-                <div className= "bg-white/70 text-xs font-normal text-gray-700 rounded-sm px-5 py-1 absolute -bottom-2 right-0 whitespace-nowrap shadow-sm">
+                <div className= "bg-white/70 text-[12px] font-normal text-gray-600 rounded-sm w-[101px] h-[25px] flex justify-center items-center p-[6px]">
                     {appointmentType}
                 </div>
             </div>
