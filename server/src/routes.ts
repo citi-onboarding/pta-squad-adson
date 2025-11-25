@@ -15,12 +15,13 @@ routes.post("/patient", PatientController.create);
 routes.get("/patient",PatientController.get);
 routes.delete("/patient/:id",PatientController.delete);
 routes.patch("/patient/:id",PatientController.update);
+routes.get("/patient/:id",PatientController.getById);
 
 
 routes.post("/consultation", ConsultationController.create);
 routes.get("/consultation",ConsultationController.get);
 routes.delete("/consultation/:id",ConsultationController.delete);
 routes.patch("/consultation/:id",ConsultationController.update);
-
+routes.get("/consultation/:id",ConsultationController.getById);
 
 export default routes;

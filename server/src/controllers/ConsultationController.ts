@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Citi, Crud } from "../global";
+import prisma from "../database";
 
 class ConsultationController implements Crud {
   constructor(private readonly citi = new Citi("Consultation")) {}
@@ -48,6 +49,31 @@ class ConsultationController implements Crud {
 
     return response.status(httpStatus).send({ messageFromUpdate });
   };
+
+
+  getById = async (request: Request, response: Response) => {
+
+    const { id } = request.params;
+    const idnum = Number(id); 
+
+
+    try {
+      const consultation = await prisma.consultation.findUnique({
+        where: {
+          id: idnum
+        },
+      });
+
+      if (!consultation) { 
+        return response.status(404).send({ message: `Consulta com ID ${id} não encontrada.` });
+      }
+
+      return response.status(200).send(consultation);
+    } catch (error) {
+      console.error("Erro ao buscar consulta por ID:", error); 
+      return response.status(500).send({ message: "Erro interno do servidor." });
+    };
+};
 }
 
 export default new ConsultationController();
