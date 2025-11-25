@@ -138,7 +138,7 @@ export default function RegistrationForm() {
                 'SF Pro Display, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
             }}
           >
-            Nome do Paciente
+            Nome do paciente
           </label>
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-4">
@@ -168,7 +168,7 @@ export default function RegistrationForm() {
                 'SF Pro Display, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
             }}
           >
-            Nome do Tutor
+            Nome do tutor
           </label>
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-4">
@@ -259,7 +259,7 @@ export default function RegistrationForm() {
                 'SF Pro Display, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
             }}
           >
-            Idade do Paciente
+            Idade do paciente
           </label>
           <div className="flex flex-col gap-1">
             <div className="flex">
@@ -337,7 +337,7 @@ export default function RegistrationForm() {
                 'SF Pro Display, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
             }}
           >
-            Médico Responsável
+            Médico responsável
           </label>
           <div className="flex flex-col gap-1">
             <Input
@@ -417,7 +417,7 @@ export default function RegistrationForm() {
               'SF Pro Display, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
           }}
         >
-          Descrição do Problema
+          Descrição do problema
         </label>
         <div className="flex flex-col gap-1">
           <textarea

@@ -138,7 +138,7 @@ function DialogDemo() {
                 </div>
 
                 <div className="grid gap-2">
-                  <Label htmlFor="medicoResponsavel">Médico Responsável</Label>
+                  <Label htmlFor="medicoResponsavel">Médico responsável</Label>
 
                   <input
                     id="medicoResponsavel"
@@ -195,7 +195,7 @@ function DialogDemo() {
               </div>
 
               <div className="grid gap-2 mt-4">
-                <Label htmlFor="descricaoProblema">Descrição do Problema</Label>
+                <Label htmlFor="descricaoProblema">Descrição do problema</Label>
 
                 <input
                   id="descricaoProblema"
