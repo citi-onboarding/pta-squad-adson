@@ -1,5 +1,3 @@
-"use client";
-
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,6 +8,8 @@ import {
   Dialog,
   DialogContent,
   DialogTrigger,
+  DialogHeader,
+  DialogTitle
 } from "@/components/ui/dialog";
 import Button from "../button";
 import citiIcon from "@/assets/citiIcon.svg";
@@ -57,24 +57,26 @@ export default function RegisterModal() {
         />
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[500px] w-full p-0 !rounded-[32px] overflow-hidden bg-white border-none shadow-2xl">
+      <DialogContent className="sm:max-w-[500px] w-full p-0 !rounded-[32px] overflow-hidden bg-white border-none shadow-2xl" aria-describedby={undefined}>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col items-center p-10">
-          <div className="mb-6 relative w-[200px] h-[80px]">
-             <Image
-                src={citiIcon}
-                alt="Citi Logo"
-                fill
-                className="object-contain"
-              />
-          </div>
-          
-          <div className="text-center mb-8 text-black px-4">
-            <h3 className="text-[18px] leading-tight">
-              <span className="font-bold">Cadastro finalizado! </span>
-              <span className="font-normal">Envie o <br/> comprovante para o </span>
-              <span className="font-bold">tutor</span>
-            </h3>
-          </div>
+          <DialogHeader className="mb-20 relative w-full h-[80px]">
+            <div className="absolute w-[200px] h-[80px] left-1/2 -translate-x-1/2">
+                <Image
+                    src={citiIcon}
+                    alt="Citi Logo"
+                    fill
+                    className="object-contain"
+                />
+            </div>
+
+            <DialogTitle className="absolute top-[90px] w-full text-center text-black px-4">
+              <div className="text-[18px] leading-tight">
+                <span className="font-bold">Cadastro finalizado! </span>
+                <span className="font-normal">Envie o <br/> comprovante para o </span>
+                <span className="font-bold">tutor</span>
+              </div>
+            </DialogTitle>
+          </DialogHeader>
 
           <div className="w-full flex flex-col gap-2 mb-8">
             <label htmlFor="email" className="text-black font-bold text-base pl-1">
