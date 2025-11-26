@@ -53,7 +53,7 @@ export default function RegisterModal() {
       <DialogTrigger asChild>
         <Button
           text="Finalizar Cadastro"
-          className="font-semibold text-xl !bg-[#50E678] !rounded-full text-white px-10"
+          type="submit"
         />
       </DialogTrigger>
 
