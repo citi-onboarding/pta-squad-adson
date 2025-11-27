@@ -88,7 +88,7 @@ export default function ConsultationDetails({
           className="w-[295px] h-[299px] object-cover"
         />
 
-        <div className="flex flex-col justify-between h-[299px]">
+        <div className="flex flex-col justify-between h-[299px] text-start">
           <div className="mt-14">
             <h3 className="text-2xl font-bold text-black">
               {consultationData.patient.name}
