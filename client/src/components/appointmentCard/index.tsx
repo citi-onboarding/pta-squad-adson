@@ -43,8 +43,7 @@ export function AppointmentCard({ date, time, petName, ownerName, vetName, anima
   return (
     <BaseButton
       onClick={handleClick}
-      variant={null}
-      className={`${colors.cardBg} p-3 rounded-xl flex items-center justify-between h-[110px] ${className}`}
+      className={`${colors.cardBg} hover:${colors.cardBg} p-3 rounded-xl flex items-center justify-between h-[110px] ${className} text-black hover:bg-opacity-80`}
     >
       <div className="flex-shrink-0 mr-3 self-center"> 
         <div className={`bg-white/70 backdrop-blur-sm p-1 rounded-sm text-center flex flex-col items-center justify-center text-black-700 h-85`}> 

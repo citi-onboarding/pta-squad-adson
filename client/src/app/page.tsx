@@ -82,14 +82,22 @@ const mockAppointments: appointmentData[] = [
 ]
 
 const placeHolderAtedimento = (
-  <div className="p-8 text-center text-gray-400 items-center flex flex-col gap-10">
+  <div className="p-8 text-center items-center flex flex-col gap-10">
     <ConsultaCard/>
     <Button text="Novo Botão" onClickAction={() => alert("Botão Funcionando!")} />
+    <div className="grid grid-cols-3 gap-6 justify-items-center">
+      {mockAppointments.map((appointment)=>(
+        <AppointmentCard 
+          key={appointment.id} 
+          {...appointment}
+        />
+      ))}
+    </div>
   </div>
 );
 
 const placeHolderCadastro = (
-  <div className="p-8 text-center text-gray-400">
+  <div className="p-8 text-center">
     <RegistrationForm/>
   </div>
 );
@@ -97,25 +105,9 @@ const placeHolderCadastro = (
  
 export default function Home() {
   return (
-    <div>
-      <Header
-        serviceContent={placeHolderAtedimento}
-        registerContent={placeHolderCadastro}
+    <Header
+      serviceContent={placeHolderAtedimento}
+      registerContent={placeHolderCadastro}
     />
-      
-      <div className="p-6 bg-gray-50 min-h-screen">
-        <h1 className="text-3xl font-extrabold text-gray-900 - mb-8">
-          Consultas
-        </h1>
-        <div className="grid grid-cols-3 gap-6 justify-items-center">
-          {mockAppointments.map((appointment)=>(
-            <AppointmentCard 
-              key={appointment.id} 
-              {...appointment}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
   );
 }

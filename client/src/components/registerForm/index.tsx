@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import Button from "@/components/button";
 
 import sheepImg from "@/assets/sheep.svg";
 import catImg from "@/assets/cat.svg";
@@ -22,6 +21,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import RegisterModal from "../registerModal";
 
 
 const patientSchema = z.object({
@@ -435,11 +435,7 @@ export default function RegistrationForm() {
 
      
       <div className="flex justify-end mt-8">
-        <Button
-          type="submit"
-          text="Finalizar Cadastro"
-          width={205}
-        />
+        <RegisterModal/>
       </div>
     </form>
   );
