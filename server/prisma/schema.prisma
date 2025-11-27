@@ -22,3 +22,25 @@ model Test {
   name String
   age  Int
 }
+
+model Patient{
+  id Int @id @default(autoincrement())
+  name String
+  tutorName String
+  species String
+  age Int
+  consultations Consultation[]
+}
+
+model Consultation{
+  id Int @id @default(autoincrement())
+  type String
+  doctorName String
+  date String
+  time String
+  description String
+
+  idPatient Int
+
+  patient Patient @relation(fields: [idPatient], references: [id])
+}

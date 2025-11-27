@@ -86,7 +86,7 @@ function DialogDemo() {
         />
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[824px] max-h-[575px] flex flex-col !rounded-3xl pt-[35px] pb-[30px]">
+      <DialogContent className="sm:max-w-[824px] max-h-[575px] flex flex-col !rounded-3xl pt-[35px] pb-[30px]" aria-describedby={undefined}>
 
         <form onSubmit={handleSubmit(onSubmit)} className="h-full flex flex-col">
 
@@ -138,7 +138,7 @@ function DialogDemo() {
                 </div>
 
                 <div className="grid gap-2">
-                  <Label htmlFor="medicoResponsavel">Médico Responsável</Label>
+                  <Label htmlFor="medicoResponsavel">Médico responsável</Label>
 
                   <input
                     id="medicoResponsavel"
@@ -195,7 +195,7 @@ function DialogDemo() {
               </div>
 
               <div className="grid gap-2 mt-4">
-                <Label htmlFor="descricaoProblema">Descrição do Problema</Label>
+                <Label htmlFor="descricaoProblema">Descrição do problema</Label>
 
                 <input
                   id="descricaoProblema"
