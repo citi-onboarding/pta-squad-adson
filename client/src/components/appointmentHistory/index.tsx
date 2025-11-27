@@ -24,14 +24,6 @@ interface AppointmentHistoryProps {
 export function AppointmentHistory({ appointments }: AppointmentHistoryProps) {
    
     const titleText = "Histórico de Consultas";
-    const containerMaxWidth = "max-w-xl";
-    const containerPadding = "p-6";
-    const cardSpacing = "space-y-4";
-    const borderStyle = "border-2 border-dashed border-gray-300";
-    const backgroundStyle = "bg-white";
-    const shadowStyle = "shadow-lg";
-    const borderRadius = "rounded-2xl";
-
     
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 4; 
@@ -74,11 +66,25 @@ export function AppointmentHistory({ appointments }: AppointmentHistoryProps) {
     };
 
     return (
-        <div className={`container mx-auto px-4 mt-8 ${containerMaxWidth}`}>
-            <h2 className="text-xl font-bold mb-4">{titleText}</h2>
+        <div className="container mx-auto px-4 mt-8" style={{ maxWidth: '558px' }}>
+            <h2 className="text-xl font-bold mb-4 text-black flex">{titleText}</h2>
             
-            <div className={`${backgroundStyle} ${borderRadius} ${borderStyle} ${shadowStyle} ${containerPadding}`}>
-                <div className={cardSpacing}>
+            <div 
+                className="bg-white shadow-lg flex flex-col justify-between"
+                style={{
+                    width: '558px',
+                    height: '515px',
+                    borderRadius: '24px',
+                    border: '1px dashed #D1D5DB',
+                    borderStyle: 'dashed',
+                    borderWidth: '1px',
+                    padding: '24px',
+                    gap: '24px',
+                    display: 'flex',
+                    flexDirection: 'column'
+                }}
+            >
+                <div className="flex flex-col flex-grow" style={{ gap: '24px' }}>
                     {currentAppointments.length > 0 ? (
                         currentAppointments.map((appointment, index) => (
                             <AppointmentHistoryItem
@@ -96,9 +102,9 @@ export function AppointmentHistory({ appointments }: AppointmentHistoryProps) {
                     )}
                 </div>
 
-               
+                
                 {totalPages > 1 && (
-                    <div className="mt-6 flex justify-center">
+                    <div className="flex justify-center mt-auto">
                         <Pagination>
                             <PaginationContent>
                                 <PaginationItem>

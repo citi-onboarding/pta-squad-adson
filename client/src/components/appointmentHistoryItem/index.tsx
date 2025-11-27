@@ -9,30 +9,18 @@ interface AppointmentHistoryItemProps {
 }
 
 export function AppointmentHistoryItem({ date, hour, type, doctor }: AppointmentHistoryItemProps) {
-  const typeColors: Record<string, string> = {
-    "Primeira Consulta": "bg-[#BFB5FF]",
-    "Vacinação": "bg-[#AAE1FF]",
-    "Retorno": "bg-[#FF6419]/60",
-    "Check-up": "bg-[#9CFF95]",
-  };
-
-  const bgColor = typeColors[type] || "bg-[#F5F5F5]";
-
   return (
     <Button
       variant="ghost"
-      className={`
-        w-full h-[82px] flex items-center justify-between
-        rounded-2xl border border-gray-200 
-        py-4 px-6 ${bgColor}
-        hover:opacity-90 transition
-      `}
+      className="flex items-center justify-between bg-[#F0F0F0] hover:opacity-90 transition"
       style={{
+        width: '510px',
+        height: '82px',
         borderRadius: '16px',
         padding: '16px 24px',
-        height: '82px',
-        width: '100%',
-        maxWidth: '510px'
+        display: 'flex',
+        justifyContent: 'space-between',
+        border: '1px solid #E5E7EB'
       }}
     >
      
@@ -45,36 +33,20 @@ export function AppointmentHistoryItem({ date, hour, type, doctor }: Appointment
           minHeight: '50px'
         }}
       >
-        <span className="font-bold text-sm leading-tight">{date}</span>
-        <span className="font-bold text-sm leading-tight">{hour}</span>
+        <span className="font-bold text-sm leading-tight text-black">{date}</span>
+        <span className="font-bold text-sm leading-tight text-black">{hour}</span>
       </div>
 
       
-      <div className="flex-1 text-center ">
-        <span 
-          className="font-bold text-lg"
-          style={{
-            width: '114px',
-            height: '15px',
-            display: 'inline-block',
-            lineHeight: '15px'
-          }}
-        >
+      <div className="flex-1 text-center">
+        <span className="font-bold text-sm text-black">
           {type}
         </span>
       </div>
 
       
       <div className="flex items-center gap-12">
-        <span 
-          className="font-normal text-base"
-          style={{
-            width: '88px',
-            height: '15px',
-            display: 'inline-block',
-            lineHeight: '15px'
-          }}
-        >
+        <span className="font-normal text-sm text-black">
           {doctor}
         </span>
         <ArrowRight className="text-black w-6 h-6" />
