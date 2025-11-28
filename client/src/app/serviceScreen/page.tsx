@@ -5,7 +5,7 @@ import Button from "@/components/button";
 import { AppointmentCard } from "@/components/appointmentCard";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
-import Chevron from "@/assets/chevron.svg";
+import {ChevronLeft} from "lucide-react";
 import { useEffect, useState } from "react";
 import { appointmentType, animalType } from "@/components/appointmentCard";
 import { useRouter } from "next/navigation";
@@ -25,22 +25,57 @@ interface Appointment {
 export function ServicePage() {
   const [tab, setTab] = useState<"agendamento" | "historico">("agendamento");
 
-  const [appointments] = useState<Appointment[]>([
-    { date: "2025-11-12", time: "09:30", petName: "Billy", ownerName: "Luiz Philip", vetName: "Dr. Augusto", animalType: "dog", appointmentType: "Vacinação" },
-    { date: "2025-11-14", time: "15:00", petName: "Mia", ownerName: "Carla Souza", vetName: "Dra. Ana", animalType: "cat", appointmentType: "Retorno" },
-    { date: "2025-10-21", time: "14:20", petName: "Nina", ownerName: "Julia Andrade", vetName: "Dra. Clara", animalType: "sheep", appointmentType: "Vacinação" },
-    { date: "2025-12-03", time: "10:30", petName: "Zeus", ownerName: "Carlos Henrique", vetName: "Dr. Felipe", animalType: "dog", appointmentType: "Primeira Consulta" },
-    { date: "2025-12-07", time: "14:00", petName: "Lola", ownerName: "Amanda Silva", vetName: "Dra. Ana", animalType: "cat", appointmentType: "Check-up" },
-    { date: "2025-12-12", time: "09:00", petName: "Thor", ownerName: "Renato Costa", vetName: "Dr. Augusto", animalType: "horse", appointmentType: "Vacinação" },
-    { date: "2025-12-15", time: "08:10", petName: "Bolt", ownerName: "Marcos", vetName: "Dr. Augusto", animalType: "dog", appointmentType: "Check-up" },
-    { date: "2025-12-28", time: "18:30", petName: "Mel", ownerName: "Bianca", vetName: "DR. AUGUSTO", animalType: "dog", appointmentType: "Retorno" },
-    { date: "2025-11-29", time: "07:00", petName: "Sol", ownerName: "Pedro", vetName: "Dr. Augusto", animalType: "cat", appointmentType: "Vacinação" }
+  const [originalData] = useState<Appointment[]>([
+    { date: "2025-01-10", time: "08:15", petName: "Past", ownerName: "Carla Mendes", vetName: "Dra. Helena Prado", animalType: "cat", appointmentType: "Vacinação" },
+    { date: "2025-03-22", time: "14:40", petName: "Past", ownerName: "Lucas Ferreira", vetName: "Dr. Daniel Moura", animalType: "dog", appointmentType: "Retorno" },
+    { date: "2025-05-18", time: "10:00", petName: "Past", ownerName: "Renata Queiroz", vetName: "Dra. Sofia Almeida", animalType: "sheep", appointmentType: "Check-up" },
+    { date: "2025-08-02", time: "16:20", petName: "Past", ownerName: "João Pedro", vetName: "Dra. Mariana Rocha", animalType: "cat", appointmentType: "Primeira Consulta" },
+
+    { date: "2025-12-05", time: "09:30", petName: "Future", ownerName: "Carlos Alberto", vetName: "Dr. Augusto Lima", animalType: "dog", appointmentType: "Vacinação" },
+    { date: "2025-11-29", time: "11:45", petName: "Future", ownerName: "Patrícia Xavier", vetName: "Dra. Luiza Franco", animalType: "sheep", appointmentType: "Check-up" },
+    { date: "2025-03-08", time: "15:10", petName: "Past", ownerName: "Fernanda Silva", vetName: "Dr. Ricardo Monteiro", animalType: "cat", appointmentType: "Primeira Consulta" },
+    { date: "2025-04-27", time: "08:55", petName: "Past", ownerName: "Bruno Vieira", vetName: "Dra. Paula Martins", animalType: "dog", appointmentType: "Retorno" },
+   
+
+    { date: "2025-01-10", time: "08:15", petName: "Past", ownerName: "Carla Mendes", vetName: "Dra. Helena Prado", animalType: "cat", appointmentType: "Vacinação" },
+    { date: "2025-03-22", time: "14:40", petName: "Past", ownerName: "Lucas Ferreira", vetName: "Dr. Daniel Moura", animalType: "dog", appointmentType: "Retorno" },
+    { date: "2025-05-18", time: "10:00", petName: "Past", ownerName: "Renata Queiroz", vetName: "Dra. Sofia Almeida", animalType: "sheep", appointmentType: "Check-up" },
+    { date: "2025-08-02", time: "16:20", petName: "Past", ownerName: "João Pedro", vetName: "Dra. Mariana Rocha", animalType: "cat", appointmentType: "Primeira Consulta" },
+
+    
+    { date: "2025-12-05", time: "09:30", petName: "Future", ownerName: "Carlos Alberto", vetName: "Dr. Augusto Lima", animalType: "dog", appointmentType: "Vacinação" },
+    { date: "2025-11-29", time: "11:45", petName: "Future", ownerName: "Patrícia Xavier", vetName: "Dra. Luiza Franco", animalType: "sheep", appointmentType: "Check-up" },
+    { date: "2025-03-08", time: "15:10", petName: "Past", ownerName: "Fernanda Silva", vetName: "Dr. Ricardo Monteiro", animalType: "cat", appointmentType: "Primeira Consulta" },
+    { date: "2025-04-27", time: "08:55", petName: "Past", ownerName: "Bruno Vieira", vetName: "Dra. Paula Martins", animalType: "dog", appointmentType: "Retorno" },
+    
+
+    { date: "2025-01-10", time: "08:15", petName: "Past", ownerName: "Carla Mendes", vetName: "Dra. Helena Prado", animalType: "cat", appointmentType: "Vacinação" },
+    { date: "2025-03-22", time: "14:40", petName: "Past", ownerName: "Lucas Ferreira", vetName: "Dr. Daniel Moura", animalType: "dog", appointmentType: "Retorno" },
+    { date: "2025-05-18", time: "10:00", petName: "Past", ownerName: "Renata Queiroz", vetName: "Dra. Sofia Almeida", animalType: "sheep", appointmentType: "Check-up" },
+    { date: "2025-08-02", time: "16:20", petName: "Past", ownerName: "João Pedro", vetName: "Dra. Mariana Rocha", animalType: "cat", appointmentType: "Primeira Consulta" },
+
+    
+    { date: "2025-12-05", time: "09:30", petName: "Future", ownerName: "Carlos Alberto", vetName: "Dr. Augusto Lima", animalType: "dog", appointmentType: "Vacinação" },
+    { date: "2025-11-29", time: "11:45", petName: "Future", ownerName: "Patrícia Xavier", vetName: "Dra. Luiza Franco", animalType: "sheep", appointmentType: "Check-up" },
+    { date: "2025-03-08", time: "15:10", petName: "Past", ownerName: "Fernanda Silva", vetName: "Dr. Ricardo Monteiro", animalType: "cat", appointmentType: "Primeira Consulta" },
+    { date: "2025-04-27", time: "08:55", petName: "Past", ownerName: "Bruno Vieira", vetName: "Dra. Paula Martins", animalType: "dog", appointmentType: "Retorno" }
   ]);
 
-  const [historyAppointments] = useState<Appointment[]>([
-    { date: "2025-02-18", time: "13:00", petName: "Luna", ownerName: "João Alves", vetName: "Dr. José Carlos", animalType: "cat", appointmentType: "Primeira Consulta" },
-    { date: "2025-01-05", time: "10:15", petName: "Rex", ownerName: "Mariana Lima", vetName: "Dr. Paulo", animalType: "dog", appointmentType: "Check-up" }
-  ]);
+
+
+  const TodayNow = new Date();
+
+  const historyAppointments = originalData.filter((data) => {
+    const appointmentDate = new Date(`${data.date}T${data.time}`)
+    return appointmentDate < TodayNow;
+  });
+
+  const nowAppointments = originalData.filter((data) => {
+    const appointmentDate = new Date(`${data.date}T${data.time}`)
+    return appointmentDate >= TodayNow;
+  });
+
+
 
   const [search, setSearch] = useState("");
   const [filterValue, setFilterValue] = useState("");
@@ -83,7 +118,7 @@ export function ServicePage() {
     if (!search.trim()) setFilterValue("");
   }, [search]);
 
-  const vetorAtual = tab === "historico" ? historyAppointments : appointments;
+  const vetorAtual = tab === "historico" ? historyAppointments : nowAppointments;
   const filtroAtivo = filterValue !== "" || filterStart !== "" || filterEnd !== "";
   const displayedAppointments = filtroAtivo ? FilterConsultation(vetorAtual) : vetorAtual;
  
@@ -102,18 +137,16 @@ export function ServicePage() {
 
 
   return (
-    <div className="service-page">
+    <div className="px-40">
 
-
-      <div className="flex items-center gap-3 pt-6 ml-[192px]">
+      <div className="flex items-center gap-3 pt-6">
         <button onClick={HandleBack} className="flex items-center">
-            <Image src={Chevron} alt="Chevron" width={32} height={32} />
+            <ChevronLeft className="h-10 w-auto"/>
         </button>
-        <h1 className="text-[30px] font-bold">Atendimento</h1>
+        <h1 className="text-[40px] font-bold">Atendimento</h1>
       </div>
 
-
-      <div className="flex flex-col mt-4 gap-3 ml-[198px]">
+      <div className="flex flex-col mt-4 gap-3">
         <h3 className="text-[20px]">Qual é o médico?</h3>
         <div className="flex gap-5">
           <Input
@@ -133,38 +166,36 @@ export function ServicePage() {
         </div>
       </div>
 
-
-      <div className="flex items-center mt-8 ml-[198px]">
+      <div className="flex items-center mt-8 justify-between">
         <div role="tablist" className="inline-flex items-center rounded-lg bg-gray-200 p-1 h-[55px]">
-            <button onClick={() => setTab("agendamento")} className={`px-6 h-[45px] rounded-lg ${tab === "agendamento" ? "bg-white shadow-sm" : "bg-gray-200 hover:opacity-80"}`}>
-                Agendamento
-            </button>
-            <button onClick={() => setTab("historico")} className={`px-6 h-[45px] rounded-lg ${tab === "historico" ? "bg-white shadow-sm" : "bg-gray-200 hover:opacity-80"}`}>
-                Histórico
-            </button>
+          <button onClick={() => setTab("agendamento")} className={`px-6 h-[45px] rounded-lg ${tab === "agendamento" ? "bg-white shadow-sm" : "bg-gray-200 hover:opacity-80"}`}>
+              Agendamento
+          </button>
+          <button onClick={() => setTab("historico")} className={`px-6 h-[45px] rounded-lg ${tab === "historico" ? "bg-white shadow-sm" : "bg-gray-200 hover:opacity-80"}`}>
+              Histórico
+          </button>
         </div>
 
-        <input
-          type="date"
-          value={filterStart}
-          onChange={e => setFilterStart(e.target.value)}
-          className="ml-[755px] border border-gray-300 rounded-lg px-2 h-[55px] w-[136px]"
-        />
-
-        <input
-          type="date"
-          value={filterEnd}
-          onChange={e => setFilterEnd(e.target.value)}
-          className="ml-[15px] border border-gray-300 rounded-lg px-2 h-[55px] w-[136px]"
-        />
+        <div>
+          <input
+            type="date"
+            value={filterStart}
+            onChange={e => setFilterStart(e.target.value)}
+            className="ml-[755px] border border-gray-300 rounded-lg px-2 h-[55px] w-[136px]"
+          />
+          <input
+            type="date"
+            value={filterEnd}
+            onChange={e => setFilterEnd(e.target.value)}
+            className="ml-[15px] border border-gray-300 rounded-lg px-2 h-[55px] w-[136px]"
+          />
+        </div>
       </div>
 
-
-      <div className="mt-8 ml-[198px] w-[1310px] h-[380px] overflow-auto">
+      <div className="mt-8 w-full h-[380px] overflow-auto">
         {displayedAppointments.length === 0 && (
           <p className="text-[18px] text-black">Nenhum registro encontrado.</p>
         )}
-
 
         {displayedAppointments.length > 0 && (
           <div className="grid grid-cols-3 gap-4 mt-4">
@@ -185,8 +216,7 @@ export function ServicePage() {
         )}
       </div>
 
-
-      <div className="mt-8 ml-[1303px]">
+      <div className="mt-8 flex justify-end">
         <Button
           text="Nova Consulta"
           bgColor="#50E678"
@@ -196,6 +226,7 @@ export function ServicePage() {
           type="button"
         />
       </div>
+
     </div>
   );
 }
