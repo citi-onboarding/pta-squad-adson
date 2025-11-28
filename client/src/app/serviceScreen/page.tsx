@@ -4,7 +4,6 @@
 import Button from "@/components/button";
 import { AppointmentCard } from "@/components/appointmentCard";
 import { Input } from "@/components/ui/input";
-import Image from "next/image";
 import {ChevronLeft} from "lucide-react";
 import { useEffect, useState } from "react";
 import { appointmentType, animalType } from "@/components/appointmentCard";
@@ -22,7 +21,7 @@ interface Appointment {
 }
 
 
-export function ServicePage() {
+export default function ServicePage() {
   const [tab, setTab] = useState<"agendamento" | "historico">("agendamento");
 
   const [originalData] = useState<Appointment[]>([

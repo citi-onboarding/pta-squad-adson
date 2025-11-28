@@ -4,7 +4,7 @@ import { Header } from "@/components/Header";
 import { AppointmentCard, appointmentType, animalType} from "@/components/appointmentCard";
 import ConsultaCard from "@/components/modalNewRegistration";
 import RegistrationForm from "@/components/registerForm";
-import { ServicePage } from "./serviceScreen/page";
+import ServicePage from "./serviceScreen/page";
 
 
 interface appointmentData{
