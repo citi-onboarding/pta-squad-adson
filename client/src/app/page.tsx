@@ -85,7 +85,7 @@ const mockAppointments: appointmentData[] = [
 
 
 const placeHolderCadastro = (
-  <div className="p-8 text-center text-gray-400">
+  <div className="p-8 text-center">
     <RegistrationForm/>
     <ConsultaCard/>
     <Button text="Novo Botão" onClickAction={() => alert("Botão Funcionando!")} />

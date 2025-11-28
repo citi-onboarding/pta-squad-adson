@@ -86,7 +86,7 @@ function DialogDemo() {
         />
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[824px] max-h-[575px] flex flex-col !rounded-3xl pt-[35px] pb-[30px]">
+      <DialogContent className="sm:max-w-[824px] max-h-[575px] flex flex-col !rounded-3xl pt-[35px] pb-[30px]" aria-describedby={undefined}>
 
         <form onSubmit={handleSubmit(onSubmit)} className="h-full flex flex-col">
 
