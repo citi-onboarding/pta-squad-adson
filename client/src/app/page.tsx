@@ -88,7 +88,6 @@ const placeHolderCadastro = (
   <div className="p-8 text-center">
     <RegistrationForm/>
     <ConsultaCard/>
-    <Button text="Novo Botão" onClickAction={() => alert("Botão Funcionando!")} />
   </div>
 );
   
