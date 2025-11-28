@@ -47,7 +47,7 @@ type FormData = z.infer<typeof formSchema>;
 
 export default function RegistrationForm() {
   const [species, setSpecies] = useState<string | null>(null);
-  const [submitResult, setSubmitResult] = useState<any | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -80,31 +80,91 @@ export default function RegistrationForm() {
   const todayISO = getTodayISO();
   const nowHHMM = getNowHHMM();
 
-  const onSubmit = (data: FormData) => {
-
-    const patientData ={
-      patientName : data.patientName,
-      tutorName : data.tutorName,
-      species: data.species,
-      age : data.age,
-    };
-
-    const consultData = {
-      consultType : data.consultType,
-      doctor : data.doctor,
-      date : data.date,
-      time : data.time,
-      description : data.description,
-    };
-
-    console.log("Paciente:",patientData);
-    console.log("Consulta:",consultData);
+  const onSubmit = async (data: FormData) => {
+    setIsLoading(true);
     
-    setSubmitResult({ 
-      ok: true, 
-      patient : patientData,
-      consult : consultData
-    });
+    try {
+      
+      const patientData = {
+        name: data.patientName,
+        tutorName: data.tutorName,
+        species: data.species,
+        age: parseInt(data.age), 
+      };
+
+      console.log("Dados do paciente que serão enviados:", patientData);
+
+      
+      if (!patientData.name || !patientData.tutorName || !patientData.species || isNaN(patientData.age)) {
+        throw new Error("Todos os campos são obrigatórios e a idade deve ser um número válido");
+      }
+
+      const patientResponse = await fetch('http://localhost:3001/patient', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(patientData),
+      });
+
+      const responseText = await patientResponse.text();
+      console.log("Resposta do backend:", responseText);
+
+      if (!patientResponse.ok) {
+        throw new Error(`Erro ao criar paciente: ${responseText}`);
+      }
+
+      const patientResult = JSON.parse(responseText);
+      console.log("Paciente criado com sucesso:", patientResult);
+
+      
+      const patientsResponse = await fetch('http://localhost:3001/patient');
+      const patients = await patientsResponse.json();
+      
+     
+      const createdPatient = patients[patients.length - 1];
+
+      if (!createdPatient || !createdPatient.id) {
+        throw new Error('Não foi possível encontrar o ID do paciente criado');
+      }
+
+      console.log("ID do paciente criado:", createdPatient.id);
+
+      
+      const consultData = {
+        type: data.consultType,
+        doctorName: data.doctor,
+        date: data.date,
+        time: data.time,
+        description: data.description,
+        idPatient: createdPatient.id, 
+      };
+
+      console.log("Dados da consulta que serão enviados:", consultData);
+
+      const consultResponse = await fetch('http://localhost:3001/consultation', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(consultData),
+      });
+
+      const consultResponseText = await consultResponse.text();
+      console.log("Resposta da consulta:", consultResponseText);
+
+      if (!consultResponse.ok) {
+        throw new Error(`Erro ao criar consulta: ${consultResponseText}`);
+      }
+
+      const consultResult = JSON.parse(consultResponseText);
+      console.log("Consulta criada com sucesso:", consultResult);
+
+    } catch (error) {
+      console.error("Erro durante o cadastro:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const animals = [
@@ -126,7 +186,7 @@ export default function RegistrationForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col gap-6 w-[1532px]  mx-auto bg-white p-6 rounded-xl "
+      className="flex flex-col gap-6 w-[1532px] mx-auto bg-white p-6 rounded-xl"
     >
       
       <div className="grid grid-cols-2 gap-4">
@@ -434,8 +494,19 @@ export default function RegistrationForm() {
       </div>
 
      
+      
       <div className="flex justify-end mt-8">
-        <RegisterModal/>
+        <button
+          type="submit"
+          disabled={isLoading}
+          className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+            isLoading
+              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+              : "bg-[#50E678] text-white hover:bg-[#45CC6B]"
+          }`}
+        >
+          {isLoading ? "Cadastrando..." : "Finalizar Cadastro"}
+        </button>
       </div>
     </form>
   );
