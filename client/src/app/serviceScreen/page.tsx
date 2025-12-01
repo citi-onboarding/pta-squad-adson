@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import api from "@/services/api"; 
 
 export interface Appointment {
-  id: number; // ID do backend
+  id: number; 
   idPatient: number;
   date: string;
   time: string;
