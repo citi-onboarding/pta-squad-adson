@@ -10,15 +10,14 @@ import { useRouter } from "next/navigation";
 
 import api from "@/services/api"; 
 
-interface Appointment {
-  id?: number | string; // ID do backend
+export interface Appointment {
+  id: number; // ID do backend
+  idPatient: number;
   date: string;
   time: string;
-  petName: string;
-  ownerName: string;
-  vetName: string;
-  animalType: animalType;
-  appointmentType: appointmentType;
+  doctorName: string;
+  type: appointmentType;
+  description: string;
 }
 
 export default function ServicePage() {
@@ -57,16 +56,22 @@ export default function ServicePage() {
 
     return vetor.filter(card => {
       const cardMs = ConvertToDate(card.date, card.time);
-      const nomeOk = termo ? NormalizeString(card.vetName).includes(termo) : true;
+      const nomeOk = termo ? NormalizeString(card.doctorName).includes(termo) : true;
       const inicioOk = inicio ? cardMs >= inicio : true;
       const fimOk = fim ? cardMs <= fim : true;
       return nomeOk && inicioOk && fimOk;
     });
   }
 
+  // função que pega "2025-11-29" e transforma em "29/11"
+  function FormatDateForUI(isoDate: string) {
+    const dia = isoDate.slice(8, 10);
+    const mes = isoDate.slice(5, 7);
+    return `${dia}/${mes}`;
+  }
 
-
-  useEffect(() => {
+  useEffect(() => 
+    {
     // Função pra buscar as consultas no backend
     const fetchConsultations = async () => {
       try {
@@ -185,14 +190,13 @@ export default function ServicePage() {
             {displayedAppointments.map((consulta) => (
               <AppointmentCard
                  key={consulta.id}
-                 date={consulta.date}
+                 date={FormatDateForUI(consulta.date)}
                  time={consulta.time}
-                 petName={consulta.petName}
-                 ownerName={consulta.ownerName}
-                 vetName={consulta.vetName}
-                 animalType={consulta.animalType}
-                 appointmentType={consulta.appointmentType}
-                 className={tab === "historico" ? "bg-gray-200 opacity-90 pointer-events-none" : ""}
+                 vetName={consulta.doctorName}
+                 appointmentType={consulta.type}
+                 idPatient={consulta.idPatient}
+                 idAppointment={consulta.id}
+                 className={tab === "historico" ? "bg-gray-200 opacity-90" : ""}
                />
              ))}
            </div>
