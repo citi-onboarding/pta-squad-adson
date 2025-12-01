@@ -21,7 +21,8 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import RegisterModal from "../registerModal";
+import api from "@/services/api";
+
 
 
 const patientSchema = z.object({
@@ -47,7 +48,7 @@ type FormData = z.infer<typeof formSchema>;
 
 export default function RegistrationForm() {
   const [species, setSpecies] = useState<string | null>(null);
-  const [submitResult, setSubmitResult] = useState<any | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -80,31 +81,58 @@ export default function RegistrationForm() {
   const todayISO = getTodayISO();
   const nowHHMM = getNowHHMM();
 
-  const onSubmit = (data: FormData) => {
-
-    const patientData ={
-      patientName : data.patientName,
-      tutorName : data.tutorName,
-      species: data.species,
-      age : data.age,
-    };
-
-    const consultData = {
-      consultType : data.consultType,
-      doctor : data.doctor,
-      date : data.date,
-      time : data.time,
-      description : data.description,
-    };
-
-    console.log("Paciente:",patientData);
-    console.log("Consulta:",consultData);
+  const onSubmit = async (data: FormData) => {
+    setIsLoading(true);
     
-    setSubmitResult({ 
-      ok: true, 
-      patient : patientData,
-      consult : consultData
-    });
+    try {
+      
+      const patientData = {
+        name: data.patientName,
+        tutorName: data.tutorName,
+        species: data.species,
+        age: parseInt(data.age), 
+      };
+
+      console.log("Dados do paciente que serão enviados:", patientData);
+
+      
+      if (!patientData.name || !patientData.tutorName || !patientData.species || isNaN(patientData.age)) {
+        throw new Error("Todos os campos são obrigatórios e a idade deve ser um número válido");
+      }
+
+      const patientResponse = await api.post( 
+        "/patient", patientData
+    
+      );
+
+
+     const createdPatient= patientResponse.data.patientWithId
+    
+      if (!createdPatient || !createdPatient.id) {
+        throw new Error('Não foi possível encontrar o ID do paciente criado');
+      }
+
+      
+      const consultData = {
+        type: data.consultType,
+        doctorName: data.doctor,
+        date: data.date,
+        time: data.time,
+        description: data.description,
+        idPatient: createdPatient.id, 
+      };
+
+      console.log("Dados da consulta que serão enviados:", consultData);
+
+      const consultResponse = await api.post("/consultation",consultData);
+      console.log("consulta cadastrada!",consultResponse.data)
+
+      
+    } catch (error) {
+      console.error("Erro durante o cadastro:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const animals = [
@@ -126,7 +154,7 @@ export default function RegistrationForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col gap-6 w-[1532px]  mx-auto bg-white p-6 rounded-xl "
+      className="flex flex-col gap-6 w-auto mx-auto bg-white  rounded-xl"
     >
       
       <div className="grid grid-cols-2 gap-4">
@@ -179,7 +207,7 @@ export default function RegistrationForm() {
                   const filtered = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, "");
                   setValue("tutorName", filtered);
                 }}
-                className={`w-[754px] h-[50px] rounded-[8px] border px-4 box-border ${
+                className={`w-full h-[50px] rounded-[8px] border px-4 box-border ${
                   errors.tutorName ? "border-red-500" : "border-[#101010]"
                 }`}
               />
@@ -301,7 +329,7 @@ export default function RegistrationForm() {
                 setValue("consultType", value);
               }}
             >
-              <SelectTrigger className={`w-[735px] h-[50px] rounded-[8px] border px-4 box-border ${
+              <SelectTrigger className={`w-full h-[50px] rounded-[8px] border px-4 box-border ${
                 errors.consultType ? "border-red-500" : "border-[#101010]"
               }`}>
                 <SelectValue placeholder="Selecione aqui" />
@@ -328,7 +356,7 @@ export default function RegistrationForm() {
       </div>
 
       
-      <div className="flex items-start gap-6">
+      <div className="flex items-start justify-between">
         <div className="flex flex-col">
           <label
             className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 text-black flex justify-start"
@@ -347,7 +375,7 @@ export default function RegistrationForm() {
                 const filtered = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, "");
                 setValue("doctor", filtered);
               }}
-              className={`w-[696px] h-[50px] rounded-[8px] border px-4 box-border ${
+              className={`min-w-[650px] max-w-[696px] h-[50px] rounded-[8px] border px-4 box-border ${
                 errors.doctor ? "border-red-500" : "border-[#101010]"
               }`}
             />
@@ -423,7 +451,7 @@ export default function RegistrationForm() {
           <textarea
             {...register("description")}
             placeholder="Digite aqui..."
-            className={`w-[1485px] h-[104px] border rounded-[8px] p-4 box-border resize-none ${
+            className={`w-full h-[104px] border rounded-[8px] p-4 box-border resize-none ${
               errors.description ? "border-red-500" : "border-[#101010]"
             }`}
           />
@@ -434,8 +462,19 @@ export default function RegistrationForm() {
       </div>
 
      
+      
       <div className="flex justify-end mt-8">
-        <RegisterModal/>
+        <button
+          type="submit"
+          disabled={isLoading}
+          className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+            isLoading
+              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+              : "bg-[#50E678] text-white hover:bg-[#45CC6B]"
+          }`}
+        >
+          {isLoading ? "Cadastrando..." : "Finalizar Cadastro"}
+        </button>
       </div>
     </form>
   );
