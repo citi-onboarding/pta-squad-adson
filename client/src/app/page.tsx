@@ -4,6 +4,8 @@ import { Header } from "@/components/Header";
 import { AppointmentCard, appointmentType, animalType} from "@/components/appointmentCard";
 import ConsultaCard from "@/components/modalNewRegistration";
 import RegistrationPage from "./RegistrationPage/page";
+import RegistrationForm from "@/components/registerForm";
+import { ServicePage } from "./serviceScreen/page";
 
 
 interface appointmentData{
@@ -81,20 +83,7 @@ const mockAppointments: appointmentData[] = [
   },
 ]
 
-const placeHolderAtedimento = (
-  <div className="p-8 text-center items-center flex flex-col gap-10">
-    <ConsultaCard/>
-    <Button text="Novo Botão" onClickAction={() => alert("Botão Funcionando!")} />
-    <div className="grid grid-cols-3 gap-6 justify-items-center">
-      {mockAppointments.map((appointment)=>(
-        <AppointmentCard 
-          key={appointment.id} 
-          {...appointment}
-        />
-      ))}
-    </div>
-  </div>
-);
+
 
 
   
@@ -102,8 +91,10 @@ const placeHolderAtedimento = (
 export default function Home() {
   return (
     <Header
-      serviceContent={placeHolderAtedimento}
+
+      serviceContent={<ServicePage/>}
       registerContent={<RegistrationPage/>}
+
     />
   );
 }

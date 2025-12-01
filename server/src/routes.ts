@@ -2,6 +2,7 @@ import express from "express";
 import userController from "./controllers/UserController";
 import PatientController from "./controllers/PatientController";
 import ConsultationController from "./controllers/ConsultationController";
+import { sendMail } from "./service/mailController";
 
 const routes = express.Router();
 
@@ -23,5 +24,8 @@ routes.get("/consultation",ConsultationController.get);
 routes.delete("/consultation/:id",ConsultationController.delete);
 routes.patch("/consultation/:id",ConsultationController.update);
 routes.get("/consultation/:id",ConsultationController.getById);
+
+
+routes.post('/mail',sendMail);
 
 export default routes;
