@@ -18,8 +18,24 @@ class ConsultationController implements Crud {
     if (isAnyUndefined) return response.status(400).send();
     const newConsultation = {type, doctorName, date, time, description, idPatient:Number(idPatient)};
     const { httpStatus, message } = await this.citi.insertIntoDatabase(newConsultation);
+   
+    const createdConsultation= await prisma.consultation.findFirst({
+      where: {
+      type:type,
+      doctorName:doctorName, 
+      date:date, 
+      time:time, 
+      description:description, 
+      idPatient:idPatient
+      }
+    })
+    if(createdConsultation){
+     return response.status(httpStatus).send({ createdConsultation});
+    }else{
+      return response.status(httpStatus).send({ message });
+    }
 
-    return response.status(httpStatus).send({ message });
+    
   };
 
   get = async (request: Request, response: Response) => {
