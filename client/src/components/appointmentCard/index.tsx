@@ -54,20 +54,19 @@ export function AppointmentCard({ idPatient, date, time, vetName, appointmentTyp
   }
 
   const [originalPatient, setPatient] = useState<Patient>();
-  const [originalSpecies, setSpecies] = useState<animalType>("dog");
-  let imagemAnimal = Animals[originalSpecies];
+  const [originalSpecies, setSpecies] = useState<animalType>();
   
 
   useEffect(() => 
     {
-    async function GetPatitentById(id:number) {
+    async function GetPatitentById() {
       const patient = await api.get(`/patient/${idPatient}`);
       return patient.data
     }
 
     const fetchPatient = async () => {
       try {
-        const patient = await GetPatitentById(idPatient)
+        const patient = await GetPatitentById()
         console.log("resposta:", patient)
         setPatient(patient);
         setSpecies(patient.species);
@@ -79,7 +78,17 @@ export function AppointmentCard({ idPatient, date, time, vetName, appointmentTyp
     };
 
     fetchPatient();
-  }, [idPatient]);
+  }, [idPatient, originalSpecies]);
+
+
+  if (!originalPatient || !originalSpecies) {
+    return (
+      <div className="w-full h-[110px] bg-gray-200 animate-pulse rounded-xl"></div>
+    )
+  }
+  
+  let imagemAnimal = Animals[originalSpecies];
+
 
 
   return (
