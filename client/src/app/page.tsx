@@ -3,7 +3,7 @@ import Button from "@/components/button";
 import { Header } from "@/components/Header";
 import { AppointmentCard, appointmentType, animalType} from "@/components/appointmentCard";
 import ConsultaCard from "@/components/modalNewRegistration";
-import RegistrationForm from "@/components/registerForm";
+import RegistrationPage from "./RegistrationPage/page";
 
 
 interface appointmentData{
@@ -96,18 +96,14 @@ const placeHolderAtedimento = (
   </div>
 );
 
-const placeHolderCadastro = (
-  <div className="p-8 text-center">
-    <RegistrationForm/>
-  </div>
-);
+
   
  
 export default function Home() {
   return (
     <Header
       serviceContent={placeHolderAtedimento}
-      registerContent={placeHolderCadastro}
+      registerContent={<RegistrationPage/>}
     />
   );
 }
