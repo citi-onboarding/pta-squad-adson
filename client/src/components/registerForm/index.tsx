@@ -21,7 +21,8 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import RegisterModal from "../registerModal";
+import api from "@/services/api";
+
 
 
 const patientSchema = z.object({
@@ -99,36 +100,17 @@ export default function RegistrationForm() {
         throw new Error("Todos os campos são obrigatórios e a idade deve ser um número válido");
       }
 
-      const patientResponse = await fetch('http://localhost:3001/patient', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(patientData),
-      });
+      const patientResponse = await api.post( 
+        "/patient", patientData
+    
+      );
 
-      const responseText = await patientResponse.text();
-      console.log("Resposta do backend:", responseText);
 
-      if (!patientResponse.ok) {
-        throw new Error(`Erro ao criar paciente: ${responseText}`);
-      }
-
-      const patientResult = JSON.parse(responseText);
-      console.log("Paciente criado com sucesso:", patientResult);
-
-      
-      const patientsResponse = await fetch('http://localhost:3001/patient');
-      const patients = await patientsResponse.json();
-      
-     
-      const createdPatient = patients[patients.length - 1];
-
+     const createdPatient= patientResponse.data.patientWithId
+    
       if (!createdPatient || !createdPatient.id) {
         throw new Error('Não foi possível encontrar o ID do paciente criado');
       }
-
-      console.log("ID do paciente criado:", createdPatient.id);
 
       
       const consultData = {
@@ -142,24 +124,10 @@ export default function RegistrationForm() {
 
       console.log("Dados da consulta que serão enviados:", consultData);
 
-      const consultResponse = await fetch('http://localhost:3001/consultation', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(consultData),
-      });
+      const consultResponse = await api.post("/consultation",consultData);
+      console.log("consulta cadastrada!",consultResponse.data)
 
-      const consultResponseText = await consultResponse.text();
-      console.log("Resposta da consulta:", consultResponseText);
-
-      if (!consultResponse.ok) {
-        throw new Error(`Erro ao criar consulta: ${consultResponseText}`);
-      }
-
-      const consultResult = JSON.parse(consultResponseText);
-      console.log("Consulta criada com sucesso:", consultResult);
-
+      
     } catch (error) {
       console.error("Erro durante o cadastro:", error);
     } finally {
@@ -186,7 +154,7 @@ export default function RegistrationForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col gap-6 w-[1532px] mx-auto bg-white p-6 rounded-xl"
+      className="flex flex-col gap-6 w-auto mx-auto bg-white  rounded-xl"
     >
       
       <div className="grid grid-cols-2 gap-4">
@@ -239,7 +207,7 @@ export default function RegistrationForm() {
                   const filtered = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, "");
                   setValue("tutorName", filtered);
                 }}
-                className={`w-[754px] h-[50px] rounded-[8px] border px-4 box-border ${
+                className={`w-full h-[50px] rounded-[8px] border px-4 box-border ${
                   errors.tutorName ? "border-red-500" : "border-[#101010]"
                 }`}
               />
@@ -361,7 +329,7 @@ export default function RegistrationForm() {
                 setValue("consultType", value);
               }}
             >
-              <SelectTrigger className={`w-[735px] h-[50px] rounded-[8px] border px-4 box-border ${
+              <SelectTrigger className={`w-full h-[50px] rounded-[8px] border px-4 box-border ${
                 errors.consultType ? "border-red-500" : "border-[#101010]"
               }`}>
                 <SelectValue placeholder="Selecione aqui" />
@@ -388,7 +356,7 @@ export default function RegistrationForm() {
       </div>
 
       
-      <div className="flex items-start gap-6">
+      <div className="flex items-start justify-between">
         <div className="flex flex-col">
           <label
             className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 text-black flex justify-start"
@@ -407,7 +375,7 @@ export default function RegistrationForm() {
                 const filtered = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, "");
                 setValue("doctor", filtered);
               }}
-              className={`w-[696px] h-[50px] rounded-[8px] border px-4 box-border ${
+              className={`min-w-[650px] max-w-[696px] h-[50px] rounded-[8px] border px-4 box-border ${
                 errors.doctor ? "border-red-500" : "border-[#101010]"
               }`}
             />
@@ -483,7 +451,7 @@ export default function RegistrationForm() {
           <textarea
             {...register("description")}
             placeholder="Digite aqui..."
-            className={`w-[1485px] h-[104px] border rounded-[8px] p-4 box-border resize-none ${
+            className={`w-full h-[104px] border rounded-[8px] p-4 box-border resize-none ${
               errors.description ? "border-red-500" : "border-[#101010]"
             }`}
           />
