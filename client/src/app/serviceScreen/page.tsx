@@ -23,14 +23,9 @@ export interface Appointment {
 export default function ServicePage() {
   const [tab, setTab] = useState<"agendamento" | "historico">("agendamento");
 
-
-  // Estado que guarda todas as consultas recebidas do backend
   const [originalData, setOriginalData] = useState<Appointment[]>([]);
-  // Estado que guarda só as consultas que já aconteceram
   const [historyAppointments, setHistoryAppointments] = useState<Appointment[]>([]);
-  // Estado que guarda as consultas futuras / do dia (agendamentos)
   const [nowAppointments, setNowAppointments] = useState<Appointment[]>([]);
-  // Estado que controla se a API ainda está respondendo
   const [loading, setLoading] = useState(true);
 
 
@@ -63,7 +58,6 @@ export default function ServicePage() {
     });
   }
 
-  // função que pega "2025-11-29" e transforma em "29/11"
   function FormatDateForUI(isoDate: string) {
     const dia = isoDate.slice(8, 10);
     const mes = isoDate.slice(5, 7);
@@ -72,7 +66,6 @@ export default function ServicePage() {
 
   useEffect(() => 
     {
-    // Função pra buscar as consultas no backend
     const fetchConsultations = async () => {
       try {
         const response = await api.get("/consultation");
@@ -92,7 +85,6 @@ export default function ServicePage() {
   }, []);
 
 
-  // separa as consultas em "passadas" e "futuras"
   useEffect(() => {
     const now = new Date().getTime();
     const history = originalData.filter(a => ConvertToDate(a.date, a.time) < now);
@@ -100,7 +92,6 @@ export default function ServicePage() {
     setHistoryAppointments(history);
     setNowAppointments(upcoming);
   }, [originalData]);
-
 
 
   useEffect(() => {

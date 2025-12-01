@@ -60,7 +60,6 @@ export function AppointmentCard({ idPatient, date, time, vetName, appointmentTyp
 
   useEffect(() => 
     {
-    // Função pra buscar as consultas no backend
     async function GetPatitentById(id:number) {
       const patient = await api.get(`/patient/${idPatient}`);
       return patient.data
