@@ -117,7 +117,7 @@ const ConsultationDetailsPage = ()=>{
       <div className="flex w-screen justify-around items-start">
         
         <div className="flex flex-col gap-10">
-          <div className="flex items-center gap-4 mt-10">
+          <div className="flex items-center gap-4 mt-10 ">
             <button
               onClick={() => router.back()}
               className="group p-1 -ml-2"
@@ -125,10 +125,10 @@ const ConsultationDetailsPage = ()=>{
               <ChevronLeft size={40} strokeWidth={2.5} className="text-black" />
             </button>
         
-          <h1 className="text-3xl md:text-5xl font-bold font-mono text-black">
-            Detalhes da Consulta
-          </h1>
-      </div>
+            <h1 className="text-3xl md:text-5xl font-bold font-mono text-black">
+              Detalhes da Consulta
+            </h1>
+          </div>
           <ConsultationDetails consultationData={consultationData} />
           
           <div className=" flex flex-col px-10   rounded-lg border-gray-300 border-2 h-40 justify-center items-center ">
@@ -140,7 +140,7 @@ const ConsultationDetailsPage = ()=>{
 
         </div>
 
-        <div>
+        <div className="pt-20">
           <AppointmentHistory
             appointments={history}
           />
