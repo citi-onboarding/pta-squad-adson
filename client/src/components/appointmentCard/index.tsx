@@ -50,7 +50,9 @@ interface Patient {
 export function AppointmentCard({ idPatient, date, time, vetName, appointmentType, onClick, className, idAppointment }: appointmentProps) {
   const colors = colorMap[appointmentType];
   const handleClick = () => {
-    alert("Clicou!")
+    if (onClick) {
+      onClick();
+    }
   }
 
   const [originalPatient, setPatient] = useState<Patient>();
