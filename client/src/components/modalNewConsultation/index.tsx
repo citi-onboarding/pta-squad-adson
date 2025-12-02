@@ -1,9 +1,7 @@
 "use client";
-
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import Button from "../button";
 import { CircleCheckBig } from "lucide-react";
 import {
@@ -22,9 +20,12 @@ import {
   SelectItem
 } from "@/components/ui/select";
 
+
 import citiIcon from "@/assets/citiIcon.svg";
 import Image from "next/image";
 import { useState } from "react";
+import api from "@/services/api";
+
 
 const inputStyle = `
   px-3 py-2 rounded-md border border-input bg-background text-sm
@@ -32,6 +33,7 @@ const inputStyle = `
   focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
   disabled:opacity-50 disabled:cursor-not-allowed
 `;
+
 
 const FormSchema = z.object({
   tipoConsulta: z.string().min(1, "Selecione um tipo de consulta"),
@@ -41,10 +43,16 @@ const FormSchema = z.object({
   descricaoProblema: z.string().min(3, "Descreva o problema"),
 });
 
+
 type FormData = z.infer<typeof FormSchema>;
 
-function DialogDemo() {
+interface DialogDemoProps {
+  patientId: number;
+}
+
+function DialogDemo({ patientId }: DialogDemoProps) {
   const [open, setOpen] = useState(false);
+
 
   const {
     register,
@@ -63,9 +71,28 @@ function DialogDemo() {
     }
   });
 
-  const onSubmit = (dados: FormData) => {
-    console.log("JSON do formulário:", JSON.stringify(dados, null, 2));
+
+  const onSubmit = async (dados: FormData) => {
+    try {
+      const response = await api.post("/consultation", {
+        idPatient: patientId,
+        type: dados.tipoConsulta,
+        doctorName: dados.medicoResponsavel,
+        date: dados.dataAtendimento,
+        time: dados.horaAtendimento,
+        description: dados.descricaoProblema,
+      });
+
+
+      console.log("Consulta cadastrada com sucesso!", response.data);
+      setOpen(false);
+      reset();
+    } catch (error) {
+      console.error(error);
+      console.log("Erro ao cadastrar consulta.");
+    }
   };
+
 
   return (
     <Dialog
@@ -86,13 +113,12 @@ function DialogDemo() {
         />
       </DialogTrigger>
 
+
       <DialogContent className="sm:max-w-[824px] max-h-[575px] flex flex-col !rounded-3xl pt-[35px] pb-[30px]" aria-describedby={undefined}>
 
         <form onSubmit={handleSubmit(onSubmit)} className="h-full flex flex-col">
-
          
           <div className="overflow-y-auto px-1 pb-4 flex-1">
-
             <DialogHeader className="w-full">
               <Image
                 src={citiIcon}
@@ -108,12 +134,13 @@ function DialogDemo() {
               </DialogTitle>
             </DialogHeader>
 
+
             <div className="flex flex-col items-center mt-4 gap-4">
 
               <div className="flex gap-[12px]">
-
                 <div className="grid gap-2">
                   <Label htmlFor="tipoConsulta">Tipo de consulta</Label>
+
 
                   <Select onValueChange={(v) => setValue("tipoConsulta", v, { shouldValidate: true })}>
                     <SelectTrigger
@@ -130,6 +157,7 @@ function DialogDemo() {
                     </SelectContent>
                   </Select>
 
+
                   {errors.tipoConsulta && (
                     <span className="text-red-500 text-[11px] leading-none">
                       {errors.tipoConsulta.message}
@@ -137,8 +165,10 @@ function DialogDemo() {
                   )}
                 </div>
 
+
                 <div className="grid gap-2">
                   <Label htmlFor="medicoResponsavel">Médico responsável</Label>
+
 
                   <input
                     id="medicoResponsavel"
@@ -147,6 +177,7 @@ function DialogDemo() {
                     {...register("medicoResponsavel")}
                   />
 
+
                   {errors.medicoResponsavel && (
                     <span className="text-red-500 text-[11px] leading-none">
                       {errors.medicoResponsavel.message}
@@ -154,12 +185,12 @@ function DialogDemo() {
                   )}
                 </div>
 
+
               </div>
-
               <div className="flex gap-[12px]">
-
                 <div className="grid gap-2">
                   <Label htmlFor="dataAtendimento">Data de atendimento</Label>
+
 
                   <input
                     id="dataAtendimento"
@@ -168,6 +199,7 @@ function DialogDemo() {
                     {...register("dataAtendimento")}
                   />
 
+
                   {errors.dataAtendimento && (
                     <span className="text-red-500 text-[11px] leading-none">
                       {errors.dataAtendimento.message}
@@ -175,8 +207,10 @@ function DialogDemo() {
                   )}
                 </div>
 
+
                 <div className="grid gap-2">
                   <Label htmlFor="horaAtendimento">Horário de atendimento</Label>
+
 
                   <input
                     id="horaAtendimento"
@@ -185,6 +219,7 @@ function DialogDemo() {
                     {...register("horaAtendimento")}
                   />
 
+
                   {errors.horaAtendimento && (
                     <span className="text-red-500 text-[11px] leading-none">
                       {errors.horaAtendimento.message}
@@ -192,8 +227,8 @@ function DialogDemo() {
                   )}
                 </div>
 
-              </div>
 
+              </div>
               <div className="grid gap-2 mt-4">
                 <Label htmlFor="descricaoProblema">Descrição do problema</Label>
 
@@ -210,12 +245,8 @@ function DialogDemo() {
                   </span>
                 )}
               </div>
-
             </div>
-
           </div>
-
-          
           <div className="w-full flex justify-center mt-4 mb-2">
             <Button
               text="Finalizar cadastro"
@@ -225,13 +256,12 @@ function DialogDemo() {
               className="font-normal"
             />
           </div>
-
         </form>
-
       </DialogContent>
-
     </Dialog>
   );
 }
-
 export { DialogDemo as ModalNewConsultation };
+
+
+
