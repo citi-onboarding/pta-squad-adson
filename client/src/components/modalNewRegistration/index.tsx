@@ -1,6 +1,12 @@
 import { ModalNewConsultation } from "../modalNewConsultation";
 
-export default function ConsultaCard() {
+
+interface consultaCardProps{
+  patientId:number
+
+}
+
+export default function ConsultaCard({patientId}:consultaCardProps) {
   return (
     <div className="w-full flex justify-center mt-8">
       <div className="bg-white shadow-md rounded-3xl p-6 w-[680px] flex flex-col items-center border border-gray-300">
@@ -9,7 +15,7 @@ export default function ConsultaCard() {
           Deseja realizar outra consulta?
         </h2>
 
-        <ModalNewConsultation />
+        <ModalNewConsultation patientId={0} />
 
       </div>
     </div>

@@ -150,10 +150,10 @@ function DialogDemo({ patientId }: DialogDemoProps) {
                       <SelectValue placeholder="Selecione aqui" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="firstConsultation">Primeira consulta</SelectItem>
-                      <SelectItem value="return">Retorno</SelectItem>
-                      <SelectItem value="checkup">Check-up</SelectItem>
-                      <SelectItem value="vaccination">Vacinação</SelectItem>
+                      <SelectItem value="Primeira Consulta">Primeira consulta</SelectItem>
+                      <SelectItem value="Retorno">Retorno</SelectItem>
+                      <SelectItem value="Check-up">Check-up</SelectItem>
+                      <SelectItem value="Vacinação">Vacinação</SelectItem>
                     </SelectContent>
                   </Select>
 
