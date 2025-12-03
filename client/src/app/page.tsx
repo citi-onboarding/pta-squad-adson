@@ -5,6 +5,7 @@ import ConsultaCard from "@/components/modalNewRegistration";
 import RegistrationPage from "./RegistrationPage/page";
 import RegistrationForm from "@/components/registerForm";
 import ServicePage from "./serviceScreen/page";
+import RegisterModal from "@/components/registerModal";
 
 
   

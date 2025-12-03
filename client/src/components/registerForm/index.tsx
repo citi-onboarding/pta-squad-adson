@@ -22,6 +22,9 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import api from "@/services/api";
+import Button from "@/components/button"; 
+import RegisterModal from "../registerModal"; 
+
 
 
 
@@ -49,13 +52,22 @@ type FormData = z.infer<typeof formSchema>;
 export default function RegistrationForm() {
   const [species, setSpecies] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalData, setModalData] = useState<{
+    patientName: string;
+    tutorName: string;
+    date: string;
+    time: string;
+  } | null>(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
-    watch
+    watch,
+    reset,
   } = useForm<FormData>({
     resolver: zodResolver(formSchema)
   });
@@ -93,21 +105,13 @@ export default function RegistrationForm() {
         age: parseInt(data.age), 
       };
 
-      console.log("Dados do paciente que serão enviados:", patientData);
-
-      
       if (!patientData.name || !patientData.tutorName || !patientData.species || isNaN(patientData.age)) {
         throw new Error("Todos os campos são obrigatórios e a idade deve ser um número válido");
       }
 
-      const patientResponse = await api.post( 
-        "/patient", patientData
-    
-      );
+      const patientResponse = await api.post("/patient", patientData);
+      const createdPatient = patientResponse.data.patientWithId;
 
-
-     const createdPatient= patientResponse.data.patientWithId
-    
       if (!createdPatient || !createdPatient.id) {
         throw new Error('Não foi possível encontrar o ID do paciente criado');
       }
@@ -122,17 +126,28 @@ export default function RegistrationForm() {
         idPatient: createdPatient.id, 
       };
 
-      console.log("Dados da consulta que serão enviados:", consultData);
-
-      const consultResponse = await api.post("/consultation",consultData);
-      console.log("consulta cadastrada!",consultResponse.data)
-
+      await api.post("/consultation", consultData);
       
+      setModalData({
+        patientName: data.patientName,
+        tutorName: data.tutorName,
+        date: data.date,
+        time: data.time,
+      });
+      
+      setIsModalOpen(true);
+
     } catch (error) {
       console.error("Erro durante o cadastro:", error);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleFinalSuccess = () => {
+    reset();
+    setSpecies(null);
+    setModalData(null);
   };
 
   const animals = [
@@ -152,6 +167,7 @@ export default function RegistrationForm() {
   ];
 
   return (
+    <>
     <form
       onSubmit={handleSubmit(onSubmit)}
       className="flex flex-col gap-6 w-auto mx-auto bg-white  rounded-xl"
@@ -464,18 +480,21 @@ export default function RegistrationForm() {
      
       
       <div className="flex justify-end mt-8">
-        <button
-          type="submit"
-          disabled={isLoading}
-          className={`px-6 py-3 rounded-lg font-medium transition-colors ${
-            isLoading
-              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-              : "bg-[#50E678] text-white hover:bg-[#45CC6B]"
-          }`}
-        >
-          {isLoading ? "Cadastrando..." : "Finalizar Cadastro"}
-        </button>
+        <Button
+            type="submit"
+            text={isLoading ? "Cadastrando..." : "Finalizar Cadastro"}
+            bgColor={isLoading ? "#D1D5DB" : "#50E678"} 
+            className={isLoading ? "cursor-not-allowed text-gray-500" : ""}
+          />
       </div>
     </form>
+
+    <RegisterModal 
+        open={isModalOpen} 
+        onOpenChange={setIsModalOpen} 
+        data={modalData} 
+        onSuccess={handleFinalSuccess}
+      />
+    </>
   );
 }
