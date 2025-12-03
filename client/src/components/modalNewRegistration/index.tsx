@@ -15,7 +15,7 @@ export default function ConsultaCard({patientId}:consultaCardProps) {
           Deseja realizar outra consulta?
         </h2>
 
-        <ModalNewConsultation patientId={0} />
+        <ModalNewConsultation patientId={patientId} />
 
       </div>
     </div>
