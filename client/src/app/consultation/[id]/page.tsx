@@ -19,6 +19,7 @@ export default function ConsultationDetailsPage(){
   const [consultationData, setConsultationData] = useState<any>(null);
   const [history, setHistory] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [idPatient, setIdPatient] = useState<number>(0);
 
   useEffect(() => {
     const fetchFullData = async () => {
@@ -33,6 +34,7 @@ export default function ConsultationDetailsPage(){
 
         const patientResponse = await api.get(`/patient/${currentConsult.idPatient}`);
         const patientData = patientResponse.data;
+        setIdPatient(currentConsult.idPatient)
 
         if (patientData) {
           const historyFormatted = (patientData.consultations || []).map((item: any) => ({
@@ -121,7 +123,7 @@ export default function ConsultationDetailsPage(){
           </div>
           <ConsultationDetails consultationData={consultationData} />
           
-          <ConsultaCard/>
+          <ConsultaCard patientId={idPatient}/>
 
         </div>
 
