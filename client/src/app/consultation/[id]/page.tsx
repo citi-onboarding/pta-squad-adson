@@ -39,7 +39,8 @@ export default function ConsultationDetailsPage(){
             date: item.date,
             type: item.type,
             hour: item.time,          
-            doctor: item.doctorName,  
+            doctor: item.doctorName,
+            id: item.id
           }));
 
           setHistory(historyFormatted); 

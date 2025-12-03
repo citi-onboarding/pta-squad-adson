@@ -15,6 +15,8 @@ interface Appointment {
     hour: string;
     type: string;
     doctor: string;
+    id:number;
+    idPatient:number
 }
 
 interface AppointmentHistoryProps {
@@ -30,15 +32,18 @@ export function AppointmentHistory({ appointments }: AppointmentHistoryProps) {
 
     
     const parseDate = (dateStr: string, hourStr: string) => {
-        const [day, month] = dateStr.split('/').map(Number);
+        const [year,month, day] = dateStr.split('-').map(Number);
         const [hour, minute] = hourStr.split(':').map(Number);
-        const year = new Date().getFullYear();
         return new Date(year, month - 1, day, hour, minute);
     };
 
    
     const now = new Date();
-
+    function formatDateForUi(isoDate:string){
+        const dia = isoDate.slice(8,10);
+        const mes = isoDate.slice(5,7);
+        return `${dia}/${mes}`;
+    }
     
     const pastAppointments = appointments.filter((appointment) => {
         const appointmentDate = parseDate(appointment.date, appointment.hour);
@@ -89,10 +94,11 @@ export function AppointmentHistory({ appointments }: AppointmentHistoryProps) {
                         currentAppointments.map((appointment, index) => (
                             <AppointmentHistoryItem
                                 key={startIndex + index}
-                                date={appointment.date}
+                                date={formatDateForUi(appointment.date)}
                                 hour={appointment.hour}
                                 type={appointment.type}
                                 doctor={appointment.doctor}
+                                id = {appointment.id}
                             />
                         ))
                     ) : (
