@@ -108,17 +108,17 @@ export default function ServicePage() {
   }
 
   return (
-    <div className="px-40">
+    <div className="px-10 md:px-40">
 
       <div className="flex items-center gap-3 pt-6">
         <button onClick={HandleBack} className="flex items-center">
           <ChevronLeft className="h-10 w-auto" />
         </button>
-        <h1 className="text-[40px] font-bold">Atendimento</h1>
+        <h1 className="text-[25px] md:text-[40px] font-bold">Atendimento</h1> 
       </div>
 
       <div className="flex flex-col mt-4 gap-3">
-        <h3 className="text-[20px]">Qual é o médico?</h3>
+        <h3 className="text-[17px] md:text-[20px]">Qual é o médico?</h3>
         <div className="flex gap-5">
           <Input
             placeholder="Pesquise..."
@@ -137,23 +137,39 @@ export default function ServicePage() {
         </div>
       </div>
 
-      <div className="flex items-center mt-8 justify-between">
+      <div className="flex flex-col md:flex-row items-start md:items-center mt-8 gap-4 md:gap-0 md:justify-between">
+
+        <div className="flex gap-3 md:hidden">
+          <input
+            type="date"
+            value={filterStart}
+            onChange={e => setFilterStart(e.target.value)}
+            className="border border-gray-300 rounded-lg px-2 h-[55px] w-[136px]"
+          />
+          <input
+            type="date"
+            value={filterEnd}
+            onChange={e => setFilterEnd(e.target.value)}
+            className="border border-gray-300 rounded-lg px-2 h-[55px] w-[136px]"
+          />
+        </div>
+
         <div role="tablist" className="inline-flex items-center rounded-lg bg-gray-200 p-1 h-[55px]">
           <button
             onClick={() => setTab("agendamento")}
-            className={`px-6 h-[45px] rounded-lg ${tab === "agendamento" ? "bg-white shadow-sm" : "hover:opacity-80"}`}
+            className={`w-[137px] px-6 h-[45px] rounded-lg ${tab === "agendamento" ? "bg-white shadow-sm" : "hover:opacity-80"}`}
           >
             Agendamento
           </button>
           <button
             onClick={() => setTab("historico")}
-            className={`px-6 h-[45px] rounded-lg ${tab === "historico" ? "bg-white shadow-sm" : "hover:opacity-80"}`}
+            className={`w-[137px] px-6 h-[45px] rounded-lg ${tab === "historico" ? "bg-white shadow-sm" : "hover:opacity-80"}`}
           >
             Histórico
           </button>
         </div>
 
-        <div className="flex gap-3">
+        <div className="hidden md:flex gap-3">
           <input
             type="date"
             value={filterStart}
@@ -170,10 +186,10 @@ export default function ServicePage() {
       </div>
 
       <div className="mt-8 w-full h-[380px] overflow-auto">
-        {loading && <p className="text-[18px]">Carregando atendimentos...</p>}
+        {loading && <p className="text-[16px] md:text-[18px]">Carregando atendimentos...</p>}
 
         {!loading && displayedAppointments.length === 0 && (
-          <p className="text-[18px]">Nenhum registro encontrado.</p>
+          <p className="text-[16px] md:text-[18px]">Nenhum registro encontrado.</p>
         )}
 
         {!loading && displayedAppointments.length > 0 && (
