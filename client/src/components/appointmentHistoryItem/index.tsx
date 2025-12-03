@@ -1,14 +1,19 @@
+"use client"
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { useRouter} from "next/navigation";
 
 interface AppointmentHistoryItemProps {
+  id: number;
   date: string;    
   hour: string;    
   type: string;    
   doctor: string;  
 }
 
-export function AppointmentHistoryItem({ date, hour, type, doctor }: AppointmentHistoryItemProps) {
+export function AppointmentHistoryItem({ id, date, hour, type, doctor }: AppointmentHistoryItemProps) {
+  const router = useRouter();
+
   return (
     <Button
       variant="ghost"
@@ -21,6 +26,9 @@ export function AppointmentHistoryItem({ date, hour, type, doctor }: Appointment
         display: 'flex',
         justifyContent: 'space-between',
         border: '1px solid #E5E7EB'
+      }}
+      onClick={()=>{
+        router.push(`/consultation/${id}`)
       }}
     >
      
