@@ -173,7 +173,7 @@ export default function RegistrationForm() {
       className="flex flex-col gap-6 w-auto mx-auto bg-white  rounded-xl"
     >
       
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label
             className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 text-black flex justify-start"
@@ -193,7 +193,7 @@ export default function RegistrationForm() {
                   const filtered = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, "");
                   setValue("patientName", filtered);
                 }}
-                className={`w-[754px] h-[50px] rounded-[8px] border px-4 py-0 box-border ${
+                className={`w-full h-[50px] rounded-[8px] border px-4 py-0 box-border ${
                   errors.patientName ? "border-red-500" : "border-[#101010]"
                 }`}
               />
@@ -247,15 +247,16 @@ export default function RegistrationForm() {
           Qual é a espécie do paciente?
         </label>
 
-        <div className=" flex 
-    items-center
-    justify-start
-    w-[1042.37px]
-    h-auto
-    p-3
-    gap-[60px]
-    bg-transparent
-  ">
+        <div className="  flex gap-6 
+    overflow-x-auto 
+    snap-x snap-mandatory 
+    scrollbar-none 
+    py-4
+
+    md:overflow-visible 
+    md:flex-wrap 
+    md:justify-start 
+    md:snap-none">
           {animals.map((animal) => {
             const isActive = species === animal.key;
 
@@ -268,7 +269,7 @@ export default function RegistrationForm() {
                   setValue("species", animal.key);
                 }}
                 aria-pressed={isActive}
-                className={`p-[10px] rounded-lg transition select-none focus:outline-none ${
+                className={`flex-shrink-0 p-1 rounded-lg transition select-none focus:outline-none ${
                   isActive ? "bg-[#D9D9D9]" : "hover:bg-gray-50"
                 }`}
               >
@@ -277,7 +278,7 @@ export default function RegistrationForm() {
                   alt={animal.alt}
                   width={120}
                   height={120}
-                  className="object-contain"
+                  className="object-contain w-[100px] h-[100px] md:w-[120px] md:h-[120px]"
                 />
               </button>
             );
@@ -294,7 +295,7 @@ export default function RegistrationForm() {
       </div>
 
 
-      <div className="grid grid-cols-2 gap-4"> 
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4"> 
         <div>
           <label
             className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 text-black flex justify-start"
@@ -316,7 +317,7 @@ export default function RegistrationForm() {
                 }}
                 inputMode="numeric"
                 pattern="\d*"
-                className={`w-[754px] h-[50px] rounded-[8px] border px-4 box-border ${
+                className={`w-full h-[50px] rounded-[8px] border px-4 box-border ${
                   errors.age ? "border-red-500" : "border-[#101010]"
                 }`}
               />
@@ -372,8 +373,9 @@ export default function RegistrationForm() {
       </div>
 
       
-      <div className="flex items-start justify-between">
-        <div className="flex flex-col">
+      {/* Médico, Data e Horário */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="md:col-span-1">
           <label
             className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 text-black flex justify-start"
             style={{
@@ -391,7 +393,7 @@ export default function RegistrationForm() {
                 const filtered = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, "");
                 setValue("doctor", filtered);
               }}
-              className={`min-w-[650px] max-w-[696px] h-[50px] rounded-[8px] border px-4 box-border ${
+              className={`w-full h-[50px] rounded-[8px] border px-4 box-border ${
                 errors.doctor ? "border-red-500" : "border-[#101010]"
               }`}
             />
@@ -401,7 +403,7 @@ export default function RegistrationForm() {
           </div>
         </div>
 
-        <div className="flex flex-col">
+        <div className="md:col-span-1">
           <label
             className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 text-black flex justify-start"
             style={{
@@ -416,7 +418,7 @@ export default function RegistrationForm() {
               {...register("date")}
               type="date"
               min={todayISO}
-              className={`w-[390px] h-[50px] rounded-[8px] border px-4 box-border ${
+              className={`w-full h-[50px] rounded-[8px] border px-4 box-border ${
                 errors.date ? "border-red-500" : "border-[#101010]"
               }`}
             />
@@ -426,7 +428,7 @@ export default function RegistrationForm() {
           </div>
         </div>
 
-        <div className="flex flex-col">
+        <div className="md:col-span-1">
           <label
             className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 text-black flex justify-start"
             style={{
@@ -441,7 +443,7 @@ export default function RegistrationForm() {
               {...register("time")}
               type="time"
               min={watchedDate === todayISO ? nowHHMM : undefined}
-              className={`w-[350px] h-[50px] rounded-[8px] border px-4 box-border ${
+              className={`w-full h-[50px] rounded-[8px] border px-4 box-border ${
                 errors.time ? "border-red-500" : "border-[#101010]"
               }`}
             />
