@@ -373,7 +373,7 @@ export default function RegistrationForm() {
       </div>
 
       
-      {/* Médico, Data e Horário */}
+      
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="md:col-span-1">
           <label
