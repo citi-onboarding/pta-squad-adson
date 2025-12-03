@@ -180,14 +180,18 @@ export default function ServicePage() {
            <div className="grid grid-cols-3 gap-4 mt-4">
             {displayedAppointments.map((consulta) => (
               <AppointmentCard
-                 key={consulta.id}
-                 date={FormatDateForUI(consulta.date)}
-                 time={consulta.time}
-                 vetName={consulta.doctorName}
-                 appointmentType={consulta.type}
-                 idPatient={consulta.idPatient}
-                 idAppointment={consulta.id}
-                 className={tab === "historico" ? "bg-gray-200 opacity-90" : ""}
+                key={consulta.id}
+                date={FormatDateForUI(consulta.date)}
+                time={consulta.time}
+                vetName={consulta.doctorName}
+                appointmentType={consulta.type}
+                idPatient={consulta.idPatient}
+                idAppointment={consulta.id}
+                className={tab === "historico" ? "bg-gray-200 opacity-90" : ""}
+
+                onClick={() => {
+                  router.push(`/consultation/${consulta.id}`)
+                }}
                />
              ))}
            </div>
