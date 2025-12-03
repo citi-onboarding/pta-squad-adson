@@ -190,11 +190,7 @@ export default function ServicePage() {
                 className={tab === "historico" ? "bg-gray-200 opacity-90" : ""}
 
                 onClick={() => {
-                  const newPage = new URLSearchParams({
-                    id: consulta.id.toString(),
-                  }).toString();
-
-                  //router.push(`...`)
+                  router.push(`/consultation/${consulta.id}`)
                 }}
                />
              ))}
