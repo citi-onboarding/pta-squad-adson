@@ -1,7 +1,13 @@
-import { AlarmClock } from "lucide-react";
+import { AlarmClock, PackageIcon } from "lucide-react";
 import { Animals } from "@/assets";
 import Image from "next/image";
 import { Button as BaseButton } from "@/components/ui/button";
+import api from "@/services/api"; 
+import { useEffect } from "react";
+
+import { Appointment } from "@/app/serviceScreen/page";
+import { useState } from "react";
+
 
 export type appointmentType = "Primeira Consulta" | "Vacinação" | "Retorno" | "Check-up";
 export type animalType = "pig" | "cow" | "horse" | "sheep" | "cat" | "dog";
@@ -22,23 +28,70 @@ const colorMap: Record<appointmentType, { cardBg: string }> = {
 };
 
 interface appointmentProps {
+  idPatient: number;
   date: string;
   time: string;
-  petName: string;
-  ownerName: string;
   vetName: string;
-  animalType: animalType;
   appointmentType: appointmentType;
   onClick?: () => void;
   className?: string;
+  idAppointment: number;
 }
 
-export function AppointmentCard({ date, time, petName, ownerName, vetName, animalType, appointmentType, onClick, className }: appointmentProps) {
+interface Patient {
+  id: number;
+  name: string;
+  tutorName: string;
+  species: string;
+  age: number;
+  consultations: Appointment[];
+}
+
+export function AppointmentCard({ idPatient, date, time, vetName, appointmentType, onClick, className, idAppointment }: appointmentProps) {
   const colors = colorMap[appointmentType];
-  let imagemAnimal = Animals[animalType];
   const handleClick = () => {
-    alert("Clicou!")
+    if (onClick) {
+      onClick();
+    }
   }
+
+  const [originalPatient, setPatient] = useState<Patient>();
+  const [originalSpecies, setSpecies] = useState<animalType>();
+  
+
+  useEffect(() => 
+    {
+    async function GetPatitentById() {
+      const patient = await api.get(`/patient/${idPatient}`);
+      return patient.data
+    }
+
+    const fetchPatient = async () => {
+      try {
+        const patient = await GetPatitentById()
+        console.log("resposta:", patient)
+        setPatient(patient);
+        setSpecies(patient.species);
+
+      } catch (err) {
+        console.error(err);
+        alert("Erro ao carregar atendimentos do servidor.");
+      }
+    };
+
+    fetchPatient();
+  }, [idPatient, originalSpecies]);
+
+
+  if (!originalPatient || !originalSpecies) {
+    return (
+      <div className="w-full h-[110px] bg-gray-200 animate-pulse rounded-xl"></div>
+    )
+  }
+  
+  let imagemAnimal = Animals[originalSpecies];
+
+
 
   return (
     <BaseButton
@@ -59,7 +112,7 @@ export function AppointmentCard({ date, time, petName, ownerName, vetName, anima
 
       <div className="flex justify-center flex-grow min-w-0 pr-2 gap-3 text-balck-700"> 
         <p className="text-[14px]  truncate leading-tight"> 
-          <span className="font-bold">{petName}</span> / {ownerName}
+          <span className="font-bold">{originalPatient?.name}</span> / {originalPatient?.tutorName}
         </p>
         <p className="text-[14px] truncate leading-tight"> 
           {vetName}

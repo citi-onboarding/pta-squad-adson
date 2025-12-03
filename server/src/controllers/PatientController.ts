@@ -18,7 +18,22 @@ class PatientController implements Crud {
     const newPatient = { name, tutorName, species, age };
     const { httpStatus, message } = await this.citi.insertIntoDatabase(newPatient);
 
-    return response.status(httpStatus).send({ message });
+    const patientWithId= await prisma.patient.findFirst({
+      where: {
+      name:name,
+      tutorName : tutorName,
+      species : species,
+      age:age
+      },
+      include:{
+        consultations:true
+      }
+    })
+    if(patientWithId){
+     return response.status(httpStatus).send({ patientWithId});
+    }else{
+      return response.status(httpStatus).send({ message });
+    }
   };
 
   get = async (request: Request, response: Response) => {
