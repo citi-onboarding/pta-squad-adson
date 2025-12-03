@@ -3,10 +3,10 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { CitiPet, MadeWith } from "../../assets";
-import RegistrationForm from "../registerForm";
 import ServicePage from "@/app/serviceScreen/page";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
+import RegistrationPage from "@/app/RegistrationPage/page";
 
 
 
@@ -77,7 +77,7 @@ export function Header() {
 
       <TabsContent value="register">
         {!params.id ?
-          <RegistrationForm/>
+          <RegistrationPage/>
           :
           null
         }
