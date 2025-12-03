@@ -21,9 +21,9 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import Button from "@/components/button"; 
 import api from "@/services/api";
-
-
+import RegisterModal from "../registerModal"; 
 
 const patientSchema = z.object({
   patientName: z.string().min(1, "Este campo é obrigatório"),
@@ -31,7 +31,6 @@ const patientSchema = z.object({
   species: z.string().min(1, "Este campo é obrigatório"),
   age: z.string().min(1, "Este campo é obrigatório"),
 });
-
 
 const consultSchema = z.object({
   consultType: z.string().min(1, "Este campo é obrigatório"),
@@ -41,7 +40,6 @@ const consultSchema = z.object({
   description: z.string().min(1, "Este campo é obrigatório"),
 });
 
-
 const formSchema = patientSchema.merge(consultSchema);
 
 type FormData = z.infer<typeof formSchema>;
@@ -49,15 +47,24 @@ type FormData = z.infer<typeof formSchema>;
 export default function RegistrationForm() {
   const [species, setSpecies] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalData, setModalData] = useState<{
+    patientName: string;
+    tutorName: string;
+    date: string;
+    time: string;
+  } | null>(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
-    watch
+    watch,
+    reset,
   } = useForm<FormData>({
-    resolver: zodResolver(formSchema)
+    resolver: zodResolver(formSchema),
   });
 
   const watchedConsultType = watch("consultType");
@@ -83,56 +90,58 @@ export default function RegistrationForm() {
 
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
-    
+
     try {
-      
       const patientData = {
         name: data.patientName,
         tutorName: data.tutorName,
         species: data.species,
-        age: parseInt(data.age), 
+        age: parseInt(data.age),
       };
 
-      console.log("Dados do paciente que serão enviados:", patientData);
-
-      
       if (!patientData.name || !patientData.tutorName || !patientData.species || isNaN(patientData.age)) {
         throw new Error("Todos os campos são obrigatórios e a idade deve ser um número válido");
       }
 
-      const patientResponse = await api.post( 
-        "/patient", patientData
-    
-      );
+      const patientResponse = await api.post("/patient", patientData);
+      const createdPatient = patientResponse.data.patientWithId;
 
-
-     const createdPatient= patientResponse.data.patientWithId
-    
       if (!createdPatient || !createdPatient.id) {
-        throw new Error('Não foi possível encontrar o ID do paciente criado');
+        throw new Error("Não foi possível encontrar o ID do paciente criado");
       }
 
-      
-      const consultData = {
+      const consultDataPayload = {
         type: data.consultType,
         doctorName: data.doctor,
         date: data.date,
         time: data.time,
         description: data.description,
-        idPatient: createdPatient.id, 
+        idPatient: createdPatient.id,
       };
 
-      console.log("Dados da consulta que serão enviados:", consultData);
-
-      const consultResponse = await api.post("/consultation",consultData);
-      console.log("consulta cadastrada!",consultResponse.data)
-
+      await api.post("/consultation", consultDataPayload);
       
+      setModalData({
+        patientName: data.patientName,
+        tutorName: data.tutorName,
+        date: data.date,
+        time: data.time,
+      });
+      
+      setIsModalOpen(true);
+
     } catch (error) {
       console.error("Erro durante o cadastro:", error);
+      alert("Ocorreu um erro ao realizar o cadastro.");
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleFinalSuccess = () => {
+    reset();
+    setSpecies(null);
+    setModalData(null);
   };
 
   const animals = [
@@ -144,32 +153,21 @@ export default function RegistrationForm() {
     { key: "dog", src: dogImg, alt: "Cachorro" },
   ];
 
-  const consultTypes = [
-    "Primeira Consulta",
-    "Vacinação",
-    "Retorno",
-    "Check-up"
-  ];
+  const consultTypes = ["Primeira Consulta", "Vacinação", "Retorno", "Check-up"];
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col gap-6 w-auto mx-auto bg-white  rounded-xl"
-    >
-      
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label
-            className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 text-black flex justify-start"
-            style={{
-              fontFamily:
-                'SF Pro Display, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
-            }}
-          >
-            Nome do paciente
-          </label>
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-4">
+    <>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col gap-6 w-auto mx-auto bg-white rounded-xl"
+      >
+        
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="text-[16px] font-bold mb-2 text-black flex justify-start font-sf">
+              Nome do paciente
+            </label>
+            <div className="flex flex-col gap-1">
               <Input
                 {...register("patientName")}
                 placeholder="Digite aqui..."
@@ -177,29 +175,21 @@ export default function RegistrationForm() {
                   const filtered = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, "");
                   setValue("patientName", filtered);
                 }}
-                className={`w-[754px] h-[50px] rounded-[8px] border px-4 py-0 box-border ${
+                className={`w-[754px] h-[50px] rounded-[8px] border px-4 box-border ${
                   errors.patientName ? "border-red-500" : "border-[#101010]"
                 }`}
               />
+              {errors.patientName && (
+                <span className="text-red-500 text-sm">{errors.patientName.message}</span>
+              )}
             </div>
-            {errors.patientName && (
-              <span className="text-red-500 text-sm">{errors.patientName.message}</span>
-            )}
           </div>
-        </div>
 
-        <div>
-          <label
-            className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 text-black flex justify-start"
-            style={{
-              fontFamily:
-                'SF Pro Display, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
-            }}
-          >
-            Nome do tutor
-          </label>
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-4">
+          <div>
+            <label className="text-[16px] font-bold mb-2 text-black flex justify-start font-sf">
+              Nome do tutor
+            </label>
+            <div className="flex flex-col gap-1">
               <Input
                 {...register("tutorName")}
                 placeholder="Digite aqui..."
@@ -211,271 +201,202 @@ export default function RegistrationForm() {
                   errors.tutorName ? "border-red-500" : "border-[#101010]"
                 }`}
               />
+              {errors.tutorName && (
+                <span className="text-red-500 text-sm">{errors.tutorName.message}</span>
+              )}
             </div>
-            {errors.tutorName && (
-              <span className="text-red-500 text-sm">{errors.tutorName.message}</span>
-            )}
           </div>
         </div>
-      </div>
 
-      
-      <div>
-        <label
-          className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-3 text-black flex justify-start"
-          style={{
-            fontFamily:
-              'SF Pro Display, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
-          }}
-        >
-          Qual é a espécie do paciente?
-        </label>
-
-        <div className=" flex 
-    items-center
-    justify-start
-    w-[1042.37px]
-    h-auto
-    p-3
-    gap-[60px]
-    bg-transparent
-  ">
-          {animals.map((animal) => {
-            const isActive = species === animal.key;
-
-            return (
-              <button
-                key={animal.key}
-                type="button"
-                onClick={() => {
-                  setSpecies(animal.key);
-                  setValue("species", animal.key);
-                }}
-                aria-pressed={isActive}
-                className={`p-[10px] rounded-lg transition select-none focus:outline-none ${
-                  isActive ? "bg-[#D9D9D9]" : "hover:bg-gray-50"
-                }`}
-              >
-                <Image
-                  src={animal.src}
-                  alt={animal.alt}
-                  width={120}
-                  height={120}
-                  className="object-contain"
-                />
-              </button>
-            );
-          })}
-        </div>
-        <input
-          {...register("species")}
-          type="hidden"
-          value={species || ""}
-        />
-        {errors.species && (
-          <span className="text-red-500 text-sm block mt-1">{errors.species.message}</span>
-        )}
-      </div>
-
-
-      <div className="grid grid-cols-2 gap-4"> 
         <div>
-          <label
-            className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 text-black flex justify-start"
-            style={{
-              fontFamily:
-                'SF Pro Display, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
-            }}
-          >
-            Idade do paciente
+          <label className="text-[16px] font-bold mb-3 text-black flex justify-start font-sf">
+            Qual é a espécie do paciente?
           </label>
-          <div className="flex flex-col gap-1">
-            <div className="flex">
+          <div className="flex items-center justify-start w-[1042.37px] h-auto p-3 gap-[60px] bg-transparent">
+            {animals.map((animal) => {
+              const isActive = species === animal.key;
+              return (
+                <button
+                  key={animal.key}
+                  type="button"
+                  onClick={() => {
+                    setSpecies(animal.key);
+                    setValue("species", animal.key);
+                  }}
+                  className={`p-[10px] rounded-lg transition select-none focus:outline-none ${
+                    isActive ? "bg-[#D9D9D9]" : "hover:bg-gray-50"
+                  }`}
+                >
+                  <Image
+                    src={animal.src}
+                    alt={animal.alt}
+                    width={120}
+                    height={120}
+                    className="object-contain"
+                  />
+                </button>
+              );
+            })}
+          </div>
+          <input {...register("species")} type="hidden" value={species || ""} />
+          {errors.species && (
+            <span className="text-red-500 text-sm block mt-1">{errors.species.message}</span>
+          )}
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="text-[16px] font-bold mb-2 text-black flex justify-start font-sf">
+              Idade do paciente
+            </label>
+            <div className="flex flex-col gap-1">
               <Input
                 {...register("age")}
                 placeholder="Digite aqui..."
+                inputMode="numeric"
                 onChange={(e) => {
                   const digits = e.target.value.replace(/\D/g, "");
                   setValue("age", digits);
                 }}
-                inputMode="numeric"
-                pattern="\d*"
                 className={`w-[754px] h-[50px] rounded-[8px] border px-4 box-border ${
                   errors.age ? "border-red-500" : "border-[#101010]"
                 }`}
               />
+              {errors.age && (
+                <span className="text-red-500 text-sm">{errors.age.message}</span>
+              )}
             </div>
-            {errors.age && (
-              <span className="text-red-500 text-sm">{errors.age.message}</span>
-            )}
+          </div>
+
+          <div>
+            <label className="text-[16px] font-bold mb-2 text-black flex justify-start font-sf">
+              Tipo da consulta
+            </label>
+            <div className="flex flex-col gap-1">
+              <Select
+                value={watchedConsultType || ""}
+                onValueChange={(value) => setValue("consultType", value)}
+              >
+                <SelectTrigger
+                  className={`w-full h-[50px] rounded-[8px] border px-4 box-border ${
+                    errors.consultType ? "border-red-500" : "border-[#101010]"
+                  }`}
+                >
+                  <SelectValue placeholder="Selecione aqui" />
+                </SelectTrigger>
+                <SelectContent>
+                  {consultTypes.map((t) => (
+                    <SelectItem key={t} value={t}>
+                      {t}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <input {...register("consultType")} type="hidden" value={watchedConsultType || ""} />
+              {errors.consultType && (
+                <span className="text-red-500 text-sm">{errors.consultType.message}</span>
+              )}
+            </div>
           </div>
         </div>
 
-        <div>
-          <label
-            className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 text-black flex justify-start"
-            style={{
-              fontFamily:
-                'SF Pro Display, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
-            }}
-          >
-            Tipo da consulta
-          </label>
+        <div className="flex items-start justify-between">
+          <div className="flex flex-col">
+            <label className="text-[16px] font-bold mb-2 text-black flex justify-start font-sf">
+              Médico responsável
+            </label>
+            <div className="flex flex-col gap-1">
+              <Input
+                {...register("doctor")}
+                placeholder="Digite aqui..."
+                onChange={(e) => {
+                  const filtered = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, "");
+                  setValue("doctor", filtered);
+                }}
+                className={`min-w-[650px] max-w-[696px] h-[50px] rounded-[8px] border px-4 box-border ${
+                  errors.doctor ? "border-red-500" : "border-[#101010]"
+                }`}
+              />
+              {errors.doctor && (
+                <span className="text-red-500 text-sm">{errors.doctor.message}</span>
+              )}
+            </div>
+          </div>
 
-          <div className="flex flex-col gap-1">
-            <Select
-              value={watchedConsultType || ""}
-              onValueChange={(value) => {
-                setValue("consultType", value);
-              }}
-            >
-              <SelectTrigger className={`w-full h-[50px] rounded-[8px] border px-4 box-border ${
-                errors.consultType ? "border-red-500" : "border-[#101010]"
-              }`}>
-                <SelectValue placeholder="Selecione aqui" />
-              </SelectTrigger>
+          <div className="flex flex-col">
+            <label className="text-[16px] font-bold mb-2 text-black flex justify-start font-sf">
+              Data do atendimento
+            </label>
+            <div className="flex flex-col gap-1">
+              <input
+                {...register("date")}
+                type="date"
+                min={todayISO}
+                className={`w-[390px] h-[50px] rounded-[8px] border px-4 box-border ${
+                  errors.date ? "border-red-500" : "border-[#101010]"
+                }`}
+              />
+              {errors.date && (
+                <span className="text-red-500 text-sm">{errors.date.message}</span>
+              )}
+            </div>
+          </div>
 
-              <SelectContent>
-                {consultTypes.map((t) => (
-                  <SelectItem key={t} value={t}>
-                    {t}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <input
-              {...register("consultType")}
-              type="hidden"
-              value={watchedConsultType || ""}
-            />
-            {errors.consultType && (
-              <span className="text-red-500 text-sm">{errors.consultType.message}</span>
-            )}
+          <div className="flex flex-col">
+            <label className="text-[16px] font-bold mb-2 text-black flex justify-start font-sf">
+              Horário do atendimento
+            </label>
+            <div className="flex flex-col gap-1">
+              <input
+                {...register("time")}
+                type="time"
+                min={watchedDate === todayISO ? nowHHMM : undefined}
+                className={`w-[350px] h-[50px] rounded-[8px] border px-4 box-border ${
+                  errors.time ? "border-red-500" : "border-[#101010]"
+                }`}
+              />
+              {errors.time && (
+                <span className="text-red-500 text-sm">{errors.time.message}</span>
+              )}
+            </div>
           </div>
         </div>
-      </div>
 
-      
-      <div className="flex items-start justify-between">
-        <div className="flex flex-col">
-          <label
-            className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 text-black flex justify-start"
-            style={{
-              fontFamily:
-                'SF Pro Display, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
-            }}
-          >
-            Médico responsável
+        <div className="flex flex-col gap-4">
+          <label className="text-[16px] font-bold text-black flex justify-start font-sf">
+            Descrição do problema
           </label>
           <div className="flex flex-col gap-1">
-            <Input
-              {...register("doctor")}
+            <textarea
+              {...register("description")}
               placeholder="Digite aqui..."
-              onChange={(e) => {
-                const filtered = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, "");
-                setValue("doctor", filtered);
-              }}
-              className={`min-w-[650px] max-w-[696px] h-[50px] rounded-[8px] border px-4 box-border ${
-                errors.doctor ? "border-red-500" : "border-[#101010]"
+              className={`w-full h-[104px] border rounded-[8px] p-4 box-border resize-none ${
+                errors.description ? "border-red-500" : "border-[#101010]"
               }`}
             />
-            {errors.doctor && (
-              <span className="text-red-500 text-sm">{errors.doctor.message}</span>
+            {errors.description && (
+              <span className="text-red-500 text-sm">{errors.description.message}</span>
             )}
           </div>
         </div>
 
-        <div className="flex flex-col">
-          <label
-            className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 text-black flex justify-start"
-            style={{
-              fontFamily:
-                'SF Pro Display, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
-            }}
-          >
-            Data do atendimento
-          </label>
-          <div className="flex flex-col gap-1">
-            <input
-              {...register("date")}
-              type="date"
-              min={todayISO}
-              className={`w-[390px] h-[50px] rounded-[8px] border px-4 box-border ${
-                errors.date ? "border-red-500" : "border-[#101010]"
-              }`}
-            />
-            {errors.date && (
-              <span className="text-red-500 text-sm">{errors.date.message}</span>
-            )}
-          </div>
-        </div>
-
-        <div className="flex flex-col">
-          <label
-            className="text-[16px] font-bold leading-[110%] tracking-[0px] mb-2 text-black flex justify-start"
-            style={{
-              fontFamily:
-                'SF Pro Display, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
-            }}
-          >
-            Horário do atendimento
-          </label>
-          <div className="flex flex-col gap-1">
-            <input
-              {...register("time")}
-              type="time"
-              min={watchedDate === todayISO ? nowHHMM : undefined}
-              className={`w-[350px] h-[50px] rounded-[8px] border px-4 box-border ${
-                errors.time ? "border-red-500" : "border-[#101010]"
-              }`}
-            />
-            {errors.time && (
-              <span className="text-red-500 text-sm">{errors.time.message}</span>
-            )}
-          </div>
-        </div>
-      </div>
-
-     
-      <div className="flex flex-col gap-4">
-        <label
-          className="text-[16px] font-bold leading-[110%] tracking-[0px] text-black flex justify-start"
-          style={{
-            fontFamily:
-              'SF Pro Display, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
-          }}
-        >
-          Descrição do problema
-        </label>
-        <div className="flex flex-col gap-1">
-          <textarea
-            {...register("description")}
-            placeholder="Digite aqui..."
-            className={`w-full h-[104px] border rounded-[8px] p-4 box-border resize-none ${
-              errors.description ? "border-red-500" : "border-[#101010]"
-            }`}
+        
+        <div className="flex justify-end mt-8">
+          <Button
+            type="submit"
+            text={isLoading ? "Cadastrando..." : "Finalizar Cadastro"}
+            bgColor={isLoading ? "#D1D5DB" : "#50E678"} 
+            className={isLoading ? "cursor-not-allowed text-gray-500" : ""}
           />
-          {errors.description && (
-            <span className="text-red-500 text-sm">{errors.description.message}</span>
-          )}
         </div>
-      </div>
+      </form>
 
-     
-      
-      <div className="flex justify-end mt-8">
-        <button
-          type="submit"
-          disabled={isLoading}
-          className={`px-6 py-3 rounded-lg font-medium transition-colors ${
-            isLoading
-              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-              : "bg-[#50E678] text-white hover:bg-[#45CC6B]"
-          }`}
-        >
-          {isLoading ? "Cadastrando..." : "Finalizar Cadastro"}
-        </button>
-      </div>
-    </form>
+      <RegisterModal 
+        open={isModalOpen} 
+        onOpenChange={setIsModalOpen} 
+        data={modalData} 
+        onSuccess={handleFinalSuccess}
+      />
+    </>
   );
 }
