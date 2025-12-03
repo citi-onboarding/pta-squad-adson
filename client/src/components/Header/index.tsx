@@ -1,19 +1,24 @@
+"use client"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { CitiPet, MadeWith } from "../../assets";
+import RegistrationForm from "../registerForm";
+import ServicePage from "@/app/serviceScreen/page";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 
-interface HeaderProps {
-  serviceContent: React.ReactNode;
-  registerContent: React.ReactNode;
-}
 
-export function Header({ serviceContent, registerContent }: HeaderProps) {
+
+export function Header() {
+  const [value,setValue] = useState("service");
   const activeBorderColor = "border-b-[#50E678]";
   const inactiveTextColor = "text-[#242424]";
+  const router = useRouter();
+  const params = useParams();
 
   return (
-    <Tabs defaultValue="service" className="w-full">
+    <Tabs value = {value} onValueChange={setValue} className="w-full">
       <header
         className={cn(
           "w-full px-4 md:px-8 py-4 flex justify-between items-center bg-white",
@@ -33,6 +38,10 @@ export function Header({ serviceContent, registerContent }: HeaderProps) {
               activeBorderColor,
               inactiveTextColor
             )}
+            onClick={()=>{
+              router.push("/")
+              setValue("service");
+            }}
           >
             Atendimento
           </TabsTrigger>
@@ -45,6 +54,10 @@ export function Header({ serviceContent, registerContent }: HeaderProps) {
               activeBorderColor,
               inactiveTextColor
             )}
+            onClick={()=>{
+              router.push("/")
+              setValue("register");
+            }}
           >
             Cadastro
           </TabsTrigger>
@@ -52,9 +65,23 @@ export function Header({ serviceContent, registerContent }: HeaderProps) {
 
         <Image src={MadeWith} alt="Made with image"/>
       </header>
+      
 
-      <TabsContent value="service">{serviceContent}</TabsContent>
-      <TabsContent value="register">{registerContent}</TabsContent>
+      <TabsContent value="service">
+        {!params.id ?
+          <ServicePage/>
+          :
+          null
+        }
+      </TabsContent>
+
+      <TabsContent value="register">
+        {!params.id ?
+          <RegistrationForm/>
+          :
+          null
+        }
+      </TabsContent>
     </Tabs>
   );
 }

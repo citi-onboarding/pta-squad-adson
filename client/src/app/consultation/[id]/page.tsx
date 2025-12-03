@@ -7,22 +7,11 @@ import { Animals } from "@/assets";
 
 import ConsultationDetails from "@/components/consultationDetails";
 import { AppointmentHistory } from "@/components/appointmentHistory";
-import { ModalNewConsultation } from "@/components/modalNewConsultation";
-import { Header } from "@/components/Header";
 import ConsultaCard from "@/components/modalNewRegistration";
-import RegistrationForm from "@/components/registerForm";
 import api from "@/services/api";
 
 
-const placeHolderCadastro = (
-  <div className="p-8 text-center">
-    <RegistrationForm/>
-    <ConsultaCard/>
-  </div>
-);
-
-
-const ConsultationDetailsPage = ()=>{
+export default function ConsultationDetailsPage(){
   const router = useRouter();
   const params = useParams();
   const id = params?.id;
@@ -131,12 +120,7 @@ const ConsultationDetailsPage = ()=>{
           </div>
           <ConsultationDetails consultationData={consultationData} />
           
-          <div className=" flex flex-col px-10   rounded-lg border-gray-300 border-2 h-40 justify-center items-center ">
-            <h2 className="font-bold text-xl mb-5">
-              Deseja realizar outra consulta?</h2>
-            <ModalNewConsultation/>
-
-          </div>
+          <ConsultaCard/>
 
         </div>
 
@@ -148,15 +132,5 @@ const ConsultationDetailsPage = ()=>{
 
       </div>
     </div>
-  );
-}
-
- 
-export default function Home() {
-  return (
-    <Header
-      serviceContent={<ConsultationDetailsPage />}
-      registerContent={placeHolderCadastro}
-    />
   );
 }
