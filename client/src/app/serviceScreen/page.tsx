@@ -8,6 +8,7 @@ import { ChevronLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import { appointmentType, animalType } from "@/components/appointmentCard";
 import { useRouter } from "next/navigation";
+import { ModalNewConsultationWithSelect } from "@/components/newConsultationWithSelect";
 
 
 import api from "@/services/api";
@@ -277,14 +278,7 @@ export default function ServicePage() {
 
 
       <div className="mt-8 flex justify-end">
-        <Button
-          text="Nova Consulta"
-          bgColor="#50E678"
-          width={205}
-          height={48}
-          onClickAction={() => console.log("Nova consulta!")}
-          type="button"
-        />
+        <ModalNewConsultationWithSelect/>
       </div>
 
 
