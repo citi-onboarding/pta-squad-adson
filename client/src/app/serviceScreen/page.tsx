@@ -132,7 +132,7 @@ export default function ServicePage() {
 
 
   return (
-    <div className="px-10 md:px-40">
+    <div className="px-8 md:px-40">
 
 
       <div className="flex items-center gap-3 pt-6">
@@ -223,7 +223,7 @@ export default function ServicePage() {
         )}
 
         {!loading && displayedAppointments.length > 0 && (
-           <div className="flex flex-col flex-wrap items-start gap-4 mt-4">
+           <div className="grid grid-rows-3 grid-flow-col overflow-x-scroll gap-3 pb-2">
             {displayedAppointments.map((consulta) => (
               <AppointmentCard
                 key={consulta.id}
