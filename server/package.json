@@ -8,7 +8,7 @@
     "dev": "concurrently \"ts-node-dev --poll --exit-child -r tsconfig-paths/register --respawn --transpile-only --ignore-watch node_modules --no-notify src/server.ts\" \"prisma generate --watch\"",
     "build": "swc src --extensions \".js,.ts\" --out-dir dist --copy-files",
     "prod": "npm run migration:deploy && npm run start",
-    "start": "npm run build && pnpm prisma migrate deploy && node dist/server.js",
+    "start": "npm run build && node dist/server.js",
     "generate": "prisma generate",
     "migration": "cross-env DATABASE_HOST='localhost' prisma migrate dev",
     "migration:deploy": "prisma migrate deploy",
@@ -31,10 +31,10 @@
     "@prisma/client": "5.2.0",
     "@swc/cli": "^0.1.62",
     "@swc/core": "^1.3.107",
-    "axios": "^1.13.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "nodemailer": "^7.0.11"
+    "nodemailer": "^7.0.11",
+    "zod": "^4.1.12"
   }
 }
