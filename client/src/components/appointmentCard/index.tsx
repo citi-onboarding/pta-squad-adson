@@ -96,7 +96,7 @@ export function AppointmentCard({ idPatient, date, time, vetName, appointmentTyp
   return (
     <BaseButton
       onClick={handleClick}
-      className={`${colors.cardBg} hover:${colors.cardBg} p-3 rounded-xl flex items-center justify-between h-[110px] ${className} text-black hover:bg-opacity-80`}
+      className={`${colors.cardBg} hover:${colors.cardBg} p-2 md:p-3 rounded-xl flex items-center justify-between w-full h-[110px] ${className} text-black hover:bg-opacity-80`}
     >
       <div className="flex-shrink-0 mr-3 self-center"> 
         <div className={`bg-white/70 backdrop-blur-sm p-1 rounded-sm text-center flex flex-col items-center justify-center text-black-700 h-85`}> 
@@ -110,8 +110,20 @@ export function AppointmentCard({ idPatient, date, time, vetName, appointmentTyp
         </div>
       </div>
 
-      <div className="flex justify-center flex-grow min-w-0 pr-2 gap-3 text-balck-700"> 
-        <p className="text-[14px]  truncate leading-tight"> 
+      
+      <div className="md:hidden flex justify-center flex-grow min-w-0 pr-2 gap-3 text-balck-700">  
+        <p className="text-[14px] truncate leading-tight flex flex-col"> 
+          <span className="font-bold">{originalPatient?.name}</span>
+          {originalPatient?.tutorName}
+        </p>
+        <p className="text-[14px] truncate flex items-center leading-tight"> 
+          {vetName}
+        </p>
+      </div>
+
+      
+      <div className="hidden md:flex justify-center md:flex-grow min-w-0 pr-2 gap-3 text-balck-700"> 
+        <p className="text-[14px] truncate leading-tight"> 
           <span className="font-bold">{originalPatient?.name}</span> / {originalPatient?.tutorName}
         </p>
         <p className="text-[14px] truncate leading-tight"> 
