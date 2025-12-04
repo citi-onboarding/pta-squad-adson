@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Button from "../button"; 
-import { CircleCheckBig } from "lucide-react";
+import {CirclePlus} from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -104,6 +104,15 @@ export function ModalNewConsultationWithSelect() {
     }
   };
 
+  const animals = {
+    cat: "GATO",
+    cow: "VACA",
+    dog: "CACHORRO",
+    horse: "CAVALO",
+    pig: "PORCO",
+    sheep: "OVELHA",
+  };
+
   return (
     <Dialog
       open={open}
@@ -119,7 +128,7 @@ export function ModalNewConsultationWithSelect() {
           text="Nova consulta"
           width={200} 
           className="font-normal"
-          icon={<CircleCheckBig className="!w-5 !h-5" />}
+          icon={<CirclePlus className="!w-5 !h-5" />}
         />
       </DialogTrigger>
 
@@ -157,10 +166,9 @@ export function ModalNewConsultationWithSelect() {
                     <SelectContent className="max-h-[200px]">
                       {patients.map((patient) => (
                         <SelectItem key={patient.id} value={String(patient.id)}>
-                          {/* Formatação: Nome (Bold) | ESPÉCIE | Idade | Tutor */}
                           <span className="font-bold text-black">{patient.name}</span>
                           <span className="text-muted-foreground">
-                            {" "}| {patient.species.toUpperCase()} | {patient.age} anos | {patient.ownerName}
+                            {" "}| {animals[patient.species as keyof typeof animals]} | {patient.age} anos | {patient.ownerName}
                           </span>
                         </SelectItem>
                       ))}
