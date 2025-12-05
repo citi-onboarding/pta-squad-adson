@@ -11,7 +11,7 @@ export default function RegistrationPage() {
 
   return(
     
-      <div className="min-h-screen bg-white p-20">
+      <div className="px-8 md:px-40 h-full py-5">
         <div className="flex items-center gap-1 w-[279px] h-[53px] mb-6">
           <button 
             onClick={() => router.back()}
@@ -24,10 +24,7 @@ export default function RegistrationPage() {
           </button>
           
           <h1 
-            className="text-[45px] font-bold text-black leading-none"
-            style={{
-              fontFamily: 'SF Pro Display, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
-            }}
+            className="text-[25px] md:text-[40px] font-bold"
           >
             Cadastro
           </h1>
