@@ -270,7 +270,7 @@ export default function RegistrationForm() {
                 }}
                 aria-pressed={isActive}
                 className={`flex-shrink-0 p-1 rounded-lg transition select-none focus:outline-none ${
-                  isActive ? "bg-[#D9D9D9]" : "hover:bg-gray-50"
+                  isActive ? "bg-[#D9D9D9]" : "hover:bg-gray-100"
                 }`}
               >
                 <Image
@@ -481,7 +481,7 @@ export default function RegistrationForm() {
 
      
       
-      <div className="flex justify-end mt-8">
+      <div className="flex justify-end mt-8 mb-5">
         <Button
             type="submit"
             text={isLoading ? "Cadastrando..." : "Finalizar Cadastro"}

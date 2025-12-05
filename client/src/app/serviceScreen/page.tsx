@@ -133,12 +133,18 @@ export default function ServicePage() {
 
 
   return (
-    <div className="px-8 md:px-40">
+    <div className="px-8 md:px-40 py-5">
 
 
       <div className="flex items-center gap-3 pt-6">
-        <button onClick={HandleBack} className="flex items-center">
-          <ChevronLeft className="h-10 w-auto" />
+        <button 
+            onClick={() => router.back()}
+            className="flex items-center justify-center hover:bg-gray-100 transition-colors p-2 pl-1 rounded-full"
+            aria-label="Voltar"
+          >
+            <ChevronLeft
+             className="w-auto h-10"
+            />
         </button>
         <h1 className="text-[25px] md:text-[40px] font-bold">Atendimento</h1>
       </div>
@@ -187,13 +193,13 @@ export default function ServicePage() {
         <div role="tablist" className="inline-flex items-center rounded-lg bg-gray-200 p-1 h-[55px]">
           <button
             onClick={() => setTab("agendamento")}
-            className={`w-[137px] px-6 h-[45px] rounded-lg ${tab === "agendamento" ? "bg-white shadow-sm" : "hover:opacity-80"}`}
+            className={`w-full px-6 h-[45px] rounded-lg ${tab === "agendamento" ? "bg-white shadow-sm" : "hover:opacity-80"}`}
           >
             Agendamento
           </button>
           <button
             onClick={() => setTab("historico")}
-            className={`w-[137px] px-6 h-[45px] rounded-lg ${tab === "historico" ? "bg-white shadow-sm" : "hover:opacity-80"}`}
+            className={`w-full px-6 h-[45px] rounded-lg ${tab === "historico" ? "bg-white shadow-sm" : "hover:opacity-80"}`}
           >
             Histórico
           </button>

@@ -31,7 +31,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <BaseButton
         ref={ref}
         className={
-          "flex items-center justify-center gap-2 px-10 rounded-full hover:opacity-70 shadow font-bold " +
+          "flex items-center justify-center gap-2 px-10 rounded-full hover:opacity-70 shadow font-bold transition-all" +
           className
         }
         onClick={onClickAction}
