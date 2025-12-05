@@ -10,7 +10,6 @@ import { AppointmentHistory } from "@/components/appointmentHistory";
 import ConsultaCard from "@/components/modalNewRegistration";
 import api from "@/services/api";
 
-
 export default function ConsultationDetailsPage(){
   const router = useRouter();
   const params = useParams();
@@ -104,30 +103,34 @@ export default function ConsultationDetailsPage(){
   }
 
   return (
-    <div className=" flex flex-col w-screen bg-white">
+    <div className="flex flex-col min-h-screen w-full bg-white pb-10">
 
-      <div className="flex w-screen justify-around items-start">
+      <div className="flex flex-col lg:flex-row w-full justify-between lg:justify-around items-center lg:items-start px-4 lg:px-0 gap-8 lg:gap-0">
         
-        <div className="flex flex-col gap-10">
-          <div className="flex items-center gap-4 mt-10 ">
+        <div className="flex flex-col gap-6 lg:gap-10 w-full lg:w-auto max-w-2xl">
+          <div className="flex items-center gap-2 lg:gap-4 mt-6 lg:mt-10">
             <button
               onClick={() => router.back()}
               className="group p-1 -ml-2"
             >
-              <ChevronLeft size={40} strokeWidth={2.5} className="text-black" />
+              <ChevronLeft size={32} strokeWidth={2.5} className="text-black lg:w-10 lg:h-10" />
             </button>
         
-            <h1 className="text-3xl md:text-5xl font-bold font-mono text-black">
+            <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold font-mono text-black">
               Detalhes da Consulta
             </h1>
           </div>
-          <ConsultationDetails consultationData={consultationData} />
-          
-          <ConsultaCard patientId={idPatient}/>
 
+          <div className="w-full">
+            <ConsultationDetails consultationData={consultationData} />
+          </div>
+          
+          <div className="w-full flex justify-center lg:justify-start">
+            <ConsultaCard patientId={idPatient}/>
+          </div>
         </div>
 
-        <div className="pt-20">
+        <div className="pt-0 lg:pt-20 w-full lg:w-auto flex justify-center lg:block">
           <AppointmentHistory
             appointments={history}
           />

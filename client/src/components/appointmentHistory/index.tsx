@@ -26,18 +26,15 @@ interface AppointmentHistoryProps {
 export function AppointmentHistory({ appointments }: AppointmentHistoryProps) {
    
     const titleText = "Histórico de Consultas";
-    
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 4; 
 
-    
     const parseDate = (dateStr: string, hourStr: string) => {
         const [year,month, day] = dateStr.split('-').map(Number);
         const [hour, minute] = hourStr.split(':').map(Number);
         return new Date(year, month - 1, day, hour, minute);
     };
 
-   
     const now = new Date();
     function formatDateForUi(isoDate:string){
         const dia = isoDate.slice(8,10);
@@ -50,20 +47,17 @@ export function AppointmentHistory({ appointments }: AppointmentHistoryProps) {
         return appointmentDate < now;
     });
 
-   
     const sortedAppointments = [...pastAppointments].sort((a, b) => {
         const dateA = parseDate(a.date, a.hour);
         const dateB = parseDate(b.date, b.hour);
         return dateB.getTime() - dateA.getTime(); 
     });
 
-    
     const totalPages = Math.ceil(sortedAppointments.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const currentAppointments = sortedAppointments.slice(startIndex, endIndex);
 
-    
     const handlePageChange = (page: number) => {
         if (page >= 1 && page <= totalPages) {
             setCurrentPage(page);
@@ -71,25 +65,16 @@ export function AppointmentHistory({ appointments }: AppointmentHistoryProps) {
     };
 
     return (
-        <div className="container mx-auto px-4 mt-8" style={{ maxWidth: '558px' }}>
-            <h2 className="text-xl font-bold mb-4 text-black flex">{titleText}</h2>
+        <div className="container w-full px-4 mt-8 flex flex-col items-center md:items-start lg:w-[558px]">
+            <h2 className="text-xl font-bold mb-4 text-black w-full text-center md:text-left">{titleText}</h2>
             
             <div 
-                className="bg-white shadow-lg flex flex-col justify-between"
+                className="bg-white shadow-lg flex flex-col justify-between w-full border border-dashed border-gray-300 rounded-3xl p-4 md:p-6 gap-6"
                 style={{
-                    width: '558px',
-                    height: '515px',
-                    borderRadius: '24px',
-                    border: '1px dashed #D1D5DB',
-                    borderStyle: 'dashed',
-                    borderWidth: '1px',
-                    padding: '24px',
-                    gap: '24px',
-                    display: 'flex',
-                    flexDirection: 'column'
+                    minHeight: '515px',
                 }}
             >
-                <div className="flex flex-col flex-grow" style={{ gap: '24px' }}>
+                <div className="flex flex-col flex-grow gap-6">
                     {currentAppointments.length > 0 ? (
                         currentAppointments.map((appointment, index) => (
                             <AppointmentHistoryItem
@@ -108,7 +93,6 @@ export function AppointmentHistory({ appointments }: AppointmentHistoryProps) {
                     )}
                 </div>
 
-                
                 {totalPages > 1 && (
                     <div className="flex justify-center mt-auto">
                         <Pagination>
@@ -123,7 +107,6 @@ export function AppointmentHistory({ appointments }: AppointmentHistoryProps) {
                                         className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
                                     />
                                 </PaginationItem>
-                                
                                 
                                 {[...Array(totalPages)].map((_, index) => {
                                     const page = index + 1;
@@ -186,4 +169,3 @@ export function AppointmentHistory({ appointments }: AppointmentHistoryProps) {
         </div>
     );
 }
-
