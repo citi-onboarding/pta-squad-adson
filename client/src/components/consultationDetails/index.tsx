@@ -75,21 +75,24 @@ export default function ConsultationDetails({
   };
 
   return (
-    <div className="w-full max-w-3xl p-6 bg-white rounded-xl">
+    <div className="w-full max-w-3xl p-4 md:p-6 bg-white rounded-xl">
       <h2 className="text-xl font-bold mb-4 text-black text-left">
         {consultationData.pageTitle}
       </h2>
-      <div className="flex gap-6">
-        <Image
-          src={consultationData.patient.image}
-          alt={consultationData.patient.imageAlt}
-          width={295}
-          height={299}
-          className="w-[295px] h-[299px] object-cover"
-        />
+      
+      <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
+        
+        <div className="relative w-full max-w-[295px] h-auto aspect-square md:h-[299px] shrink-0">
+          <Image
+            src={consultationData.patient.image}
+            alt={consultationData.patient.imageAlt}
+            fill
+            className="object-cover rounded-md"
+          />
+        </div>
 
-        <div className="flex flex-col justify-between h-[299px] text-start">
-          <div className="mt-14">
+        <div className="flex flex-col justify-between w-full md:h-[299px] text-center md:text-start">
+          <div className="mt-4 md:mt-14">
             <h3 className="text-2xl font-bold text-black">
               {consultationData.patient.name}
             </h3>
@@ -99,7 +102,7 @@ export default function ConsultationDetails({
             </p>
           </div>
 
-          <div className="mb-4">
+          <div className="mb-4 mt-4 md:mt-0">
             <p className="text-black text-[16px] leading-[110%] tracking-[0] font-normal">
               {consultationData.tutor.name}
             </p>
@@ -112,21 +115,21 @@ export default function ConsultationDetails({
       </div>
 
       <div className="mt-6">
-        <h3 className="font-bold mb-1 flex  text-left text-black">
+        <h3 className="font-bold mb-1 flex justify-center md:justify-start text-black">
           {consultationData.problemSection.title}
         </h3>
-        <p className="text-black text-sm leading-relaxed text-left">
+        <p className="text-black text-sm leading-relaxed text-center md:text-left break-words">
           {consultationData.consultation.description}
         </p>
       </div>
 
-      <div className="mt-6 flex items-center gap-5">
+      <div className="mt-6 flex flex-col md:flex-row items-center gap-3 md:gap-5 justify-center md:justify-start">
         <h3 className="font-bold text-black">
           {consultationData.consultation.typeLabel}
         </h3>
 
         <span
-          className={`px-4 py-1 rounded-md text-black  ${typeColors[consultationData.consultation.type]}`}
+          className={`px-4 py-1 rounded-md text-black text-center ${typeColors[consultationData.consultation.type]}`}
         >
           {consultationData.consultation.type}
         </span>
@@ -134,5 +137,3 @@ export default function ConsultationDetails({
     </div>
   );
 }
-
-
