@@ -103,20 +103,23 @@ export default function ConsultationDetailsPage(){
   }
 
   return (
-    <div className="flex flex-col min-h-screen w-full bg-white pb-10">
+    <div className="flex flex-col min-h-screen w-full bg-white px-8 md:px-40 py-5">
 
-      <div className="flex flex-col lg:flex-row w-full justify-between lg:justify-around items-center lg:items-start px-4 lg:px-0 gap-8 lg:gap-0">
+      <div className="flex flex-col lg:flex-row w-full justify-between lg:justify-between items-center lg:items-start px-4 lg:px-0 gap-8 lg:gap-0">
         
         <div className="flex flex-col gap-6 lg:gap-10 w-full lg:w-auto max-w-2xl">
           <div className="flex items-center gap-2 lg:gap-4 mt-6 lg:mt-10">
-            <button
+            <button 
               onClick={() => router.back()}
-              className="group p-1 -ml-2"
+              className="flex items-center justify-center hover:bg-gray-100 transition-colors p-2 pl-1 rounded-full"
+              aria-label="Voltar"
             >
-              <ChevronLeft size={32} strokeWidth={2.5} className="text-black lg:w-10 lg:h-10" />
+            <ChevronLeft
+              className="w-auto h-10"
+            />
             </button>
         
-            <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold font-mono text-black">
+            <h1 className="text-[25px] md:text-[40px] font-bold">
               Detalhes da Consulta
             </h1>
           </div>

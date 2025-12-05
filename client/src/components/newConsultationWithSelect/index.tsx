@@ -127,7 +127,7 @@ export function ModalNewConsultationWithSelect() {
         <Button
           text="Nova consulta"
           width={200} 
-          className="font-normal"
+          className="font-normal mb-5"
           icon={<CirclePlus className="!w-5 !h-5" />}
         />
       </DialogTrigger>
